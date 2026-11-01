@@ -4,7 +4,6 @@ import {
   ArrowRight,
   Check,
   CheckCircle2,
-  ChevronDown,
   ClipboardList,
   Download,
   FileSpreadsheet,
@@ -65,7 +64,6 @@ export function DevoteeRegistrationPage() {
   const [form, setForm] = useState(empty);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [receipt, setReceipt] = useState<Receipt | null>(null);
-  const [preview, setPreview] = useState(false);
   function update(key: keyof typeof empty, value: string | boolean) {
     setForm((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: "" }));
@@ -83,7 +81,6 @@ export function DevoteeRegistrationPage() {
       return;
     }
     setReceipt(makeDemoReceipt(result.data));
-    setPreview(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
   const field = (
@@ -189,7 +186,6 @@ export function DevoteeRegistrationPage() {
                   setReceipt(null);
                   setForm(empty);
                   setErrors({});
-                  setPreview(false);
                 }}
               >
                 Try another registration <ArrowRight className="h-4 w-4" />
@@ -344,83 +340,6 @@ export function DevoteeRegistrationPage() {
             </aside>
           </div>
         )}
-        <section className="mt-9 overflow-hidden rounded-3xl border border-border bg-card">
-          <button
-            type="button"
-            aria-expanded={preview}
-            aria-controls="collection-preview"
-            onClick={() => setPreview(!preview)}
-            className="flex w-full items-center justify-between gap-4 p-6 text-left"
-          >
-            <span className="flex items-center gap-3">
-              <FileSpreadsheet className="h-6 w-6 text-primary" />
-              <span>
-                <span className="block font-semibold">
-                  How registrations will reach Google Sheets
-                </span>
-                <span className="mt-1 block text-xs text-muted-foreground">
-                  See the data flow and a sample spreadsheet row
-                </span>
-              </span>
-            </span>
-            <ChevronDown className={`h-5 w-5 shrink-0 transition ${preview ? "rotate-180" : ""}`} />
-          </button>
-          {preview && (
-            <div id="collection-preview" className="border-t border-border p-6">
-              <div className="grid gap-3 sm:grid-cols-3">
-                {[
-                  "1. Devotee completes this form",
-                  "2. Secure submission is validated",
-                  "3. A new row appears in your Sheet",
-                ].map((t) => (
-                  <div key={t} className="rounded-xl bg-primary/5 p-4 text-sm font-medium">
-                    {t}
-                  </div>
-                ))}
-              </div>
-              <p className="my-5 text-xs leading-6 text-muted-foreground">
-                {receipt ? "Preview of the details you entered." : "Illustrative sample data only."}{" "}
-                Live collection will be enabled after the Google Sheet and submission connection are
-                configured.
-              </p>
-              <div className="overflow-x-auto rounded-xl border border-border">
-                <table className="w-full whitespace-nowrap text-left text-xs">
-                  <thead className="bg-primary/10">
-                    <tr>
-                      {SHEET_COLUMNS.map((c) => (
-                        <th key={c} className="px-4 py-3 font-semibold">
-                          {c}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      {(receipt
-                        ? sheetRow(receipt)
-                        : [
-                            "DEMO-SAMPLE",
-                            "Sample timestamp",
-                            "Sample Devotee",
-                            "9XXXXXXXXX",
-                            "sample@example.com",
-                            "MVP Colony",
-                            "Devotee",
-                            "MVP Colony",
-                            "Yes",
-                          ]
-                      ).map((c, i) => (
-                        <td key={i} className="border-t border-border px-4 py-4">
-                          {c}
-                        </td>
-                      ))}
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
-        </section>
       </div>
     </div>
   );
