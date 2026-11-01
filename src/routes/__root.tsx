@@ -12,7 +12,7 @@ import appCss from "../styles.css?url";
 import { ogImage } from "@/lib/site-images";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { FloatingDonate } from "@/components/layout/FloatingDonate";
+import { FloatingRegistration } from "@/components/layout/FloatingRegistration";
 import { Toaster } from "sonner";
 import { WelcomeOverlay } from "@/components/layout/WelcomeOverlay";
 
@@ -206,7 +206,7 @@ function RootComponent() {
 
         <Footer />
 
-        <FloatingDonate />
+        <FloatingRegistration />
 
         <Toaster
           position="top-right"

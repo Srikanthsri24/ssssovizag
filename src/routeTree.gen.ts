@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DevoteeRegistrationRouteImport } from './routes/devotee-registration'
 import { Route as DonateRouteImport } from './routes/donate'
 import { Route as EducationRouteImport } from './routes/education'
 import { Route as EventsRouteImport } from './routes/events'
@@ -35,6 +36,11 @@ const AboutRoute = AboutRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DevoteeRegistrationRoute = DevoteeRegistrationRouteImport.update({
+  id: '/devotee-registration',
+  path: '/devotee-registration',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DonateRoute = DonateRouteImport.update({
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/devotee-registration': typeof DevoteeRegistrationRoute
   '/donate': typeof DonateRoute
   '/education': typeof EducationRoute
   '/events': typeof EventsRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/devotee-registration': typeof DevoteeRegistrationRoute
   '/donate': typeof DonateRoute
   '/education': typeof EducationRoute
   '/events': typeof EventsRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
+  '/devotee-registration': typeof DevoteeRegistrationRoute
   '/donate': typeof DonateRoute
   '/education': typeof EducationRoute
   '/events': typeof EventsRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/devotee-registration'
     | '/donate'
     | '/education'
     | '/events'
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/devotee-registration'
     | '/donate'
     | '/education'
     | '/events'
@@ -160,6 +171,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/contact'
+    | '/devotee-registration'
     | '/donate'
     | '/education'
     | '/events'
@@ -175,6 +187,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
+  DevoteeRegistrationRoute: typeof DevoteeRegistrationRoute
   DonateRoute: typeof DonateRoute
   EducationRoute: typeof EducationRoute
   EventsRoute: typeof EventsRoute
@@ -207,6 +220,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/devotee-registration': {
+      id: '/devotee-registration'
+      path: '/devotee-registration'
+      fullPath: '/devotee-registration'
+      preLoaderRoute: typeof DevoteeRegistrationRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/donate': {
@@ -279,6 +299,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
+  DevoteeRegistrationRoute: DevoteeRegistrationRoute,
   DonateRoute: DonateRoute,
   EducationRoute: EducationRoute,
   EventsRoute: EventsRoute,
