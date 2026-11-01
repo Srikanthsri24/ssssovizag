@@ -1,9 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import {
-  AnimatePresence,
-  motion,
-  type Variants,
-} from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import {
   ArrowRight,
   CheckCircle2,
@@ -54,8 +50,8 @@ const programmes: WelfareProgramme[] = [
       "Volunteer participation in preparation and service",
       "Service offered without discrimination",
     ],
-    actionLabel: "Support Narayana Seva",
-    actionTo: "/donate",
+    actionLabel: "Join Narayana Seva",
+    actionTo: "/devotee-registration",
   },
   {
     id: "community-care",
@@ -115,22 +111,19 @@ const serviceSteps = [
   {
     number: "01",
     title: "Understand",
-    description:
-      "Listen carefully and identify the genuine needs of individuals and communities.",
+    description: "Listen carefully and identify the genuine needs of individuals and communities.",
     Icon: Heart,
   },
   {
     number: "02",
     title: "Prepare",
-    description:
-      "Volunteers organise food, materials and support with care and responsibility.",
+    description: "Volunteers organise food, materials and support with care and responsibility.",
     Icon: PackageCheck,
   },
   {
     number: "03",
     title: "Serve",
-    description:
-      "Assistance is offered with dignity, compassion and a spirit of selfless seva.",
+    description: "Assistance is offered with dignity, compassion and a spirit of selfless seva.",
     Icon: HandHeart,
   },
 ];
@@ -160,24 +153,18 @@ const itemVariants: Variants = {
 };
 
 export function WelfarePage() {
-  const [activeProgrammeId, setActiveProgrammeId] =
-    useState(programmes[0].id);
+  const [activeProgrammeId, setActiveProgrammeId] = useState(programmes[0].id);
 
   const activeProgramme =
-    programmes.find(
-      (programme) =>
-        programme.id === activeProgrammeId,
-    ) ?? programmes[0];
+    programmes.find((programme) => programme.id === activeProgrammeId) ?? programmes[0];
 
   const ActiveProgrammeIcon = activeProgramme.Icon;
 
   const scrollToProgrammes = () => {
-    document
-      .getElementById("welfare-programmes")
-      ?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+    document.getElementById("welfare-programmes")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
   };
 
   return (
@@ -195,49 +182,36 @@ export function WelfarePage() {
         <Reveal>
           <div className="overflow-hidden mt-2 rounded-[1.75rem] border border-border bg-card/90 p-3 shadow-xl backdrop-blur-xl sm:rounded-[2rem] sm:p-4">
             <div className="grid gap-3 sm:grid-cols-3">
-              {impactHighlights.map(
-                (
-                  {
-                    Icon,
-                    title,
-                    description,
-                  },
-                  index,
-                ) => (
-                  <motion.div
-                    key={title}
-                    initial={{
-                      opacity: 0,
-                      y: 14,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                    }}
-                    transition={{
-                      delay: 0.15 + index * 0.08,
-                    }}
-                    whileHover={{
-                      y: -4,
-                    }}
-                    className="group flex items-center gap-4 rounded-2xl border border-transparent bg-background/60 p-4 transition hover:border-primary/20 hover:bg-primary/[0.05]"
-                  >
-                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
-                      <Icon className="h-5 w-5" />
-                    </div>
+              {impactHighlights.map(({ Icon, title, description }, index) => (
+                <motion.div
+                  key={title}
+                  initial={{
+                    opacity: 0,
+                    y: 14,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  transition={{
+                    delay: 0.15 + index * 0.08,
+                  }}
+                  whileHover={{
+                    y: -4,
+                  }}
+                  className="group flex items-center gap-4 rounded-2xl border border-transparent bg-background/60 p-4 transition hover:border-primary/20 hover:bg-primary/[0.05]"
+                >
+                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
+                    <Icon className="h-5 w-5" />
+                  </div>
 
-                    <div>
-                      <h2 className="font-display text-lg font-semibold text-foreground">
-                        {title}
-                      </h2>
+                  <div>
+                    <h2 className="font-display text-lg font-semibold text-foreground">{title}</h2>
 
-                      <p className="mt-0.5 text-xs leading-5 text-muted-foreground">
-                        {description}
-                      </p>
-                    </div>
-                  </motion.div>
-                ),
-              )}
+                    <p className="mt-0.5 text-xs leading-5 text-muted-foreground">{description}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
           </div>
         </Reveal>
@@ -257,17 +231,12 @@ export function WelfarePage() {
                 </div>
 
                 <h2 className="mt-5 max-w-2xl font-display text-3xl font-semibold leading-tight text-foreground sm:text-4xl lg:text-5xl">
-                  Service rooted in{" "}
-                  <span className="text-gradient">
-                    love and care
-                  </span>
+                  Service rooted in <span className="text-gradient">love and care</span>
                 </h2>
 
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base sm:leading-8">
-                  From food distribution to community
-                  assistance, every welfare activity at
-                  Premsadan is carried out with compassion,
-                  responsibility and respect for human
+                  From food distribution to community assistance, every welfare activity at
+                  Premsadan is carried out with compassion, responsibility and respect for human
                   dignity.
                 </p>
 
@@ -276,40 +245,28 @@ export function WelfarePage() {
                     {
                       Icon: ShieldCheck,
                       title: "Dignified support",
-                      description:
-                        "Every person is served with sensitivity, respect and care.",
+                      description: "Every person is served with sensitivity, respect and care.",
                     },
                     {
                       Icon: Users,
                       title: "Community participation",
-                      description:
-                        "Volunteers work together to create meaningful local impact.",
+                      description: "Volunteers work together to create meaningful local impact.",
                     },
-                  ].map(
-                    ({
-                      Icon,
-                      title,
-                      description,
-                    }) => (
-                      <motion.div
-                        key={title}
-                        whileHover={{
-                          y: -3,
-                        }}
-                        className="rounded-2xl border border-border bg-background/65 p-4 shadow-sm transition hover:border-primary/25 hover:bg-primary/[0.045]"
-                      >
-                        <Icon className="h-5 w-5 text-primary" />
+                  ].map(({ Icon, title, description }) => (
+                    <motion.div
+                      key={title}
+                      whileHover={{
+                        y: -3,
+                      }}
+                      className="rounded-2xl border border-border bg-background/65 p-4 shadow-sm transition hover:border-primary/25 hover:bg-primary/[0.045]"
+                    >
+                      <Icon className="h-5 w-5 text-primary" />
 
-                        <h3 className="mt-3 text-sm font-semibold text-foreground">
-                          {title}
-                        </h3>
+                      <h3 className="mt-3 text-sm font-semibold text-foreground">{title}</h3>
 
-                        <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                          {description}
-                        </p>
-                      </motion.div>
-                    ),
-                  )}
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{description}</p>
+                    </motion.div>
+                  ))}
                 </div>
 
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -325,7 +282,6 @@ export function WelfarePage() {
                     className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-7 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition hover:shadow-xl"
                   >
                     Explore Welfare Work
-
                     <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                   </motion.button>
 
@@ -334,7 +290,6 @@ export function WelfarePage() {
                     className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-border bg-background/70 px-6 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-primary/[0.06]"
                   >
                     Join as Volunteer
-
                     <ChevronRight className="h-4 w-4 transition group-hover:translate-x-1" />
                   </Link>
                 </div>
@@ -366,13 +321,10 @@ export function WelfarePage() {
                     </div>
 
                     <div>
-                      <p className="font-display text-lg font-semibold">
-                        Compassion in action
-                      </p>
+                      <p className="font-display text-lg font-semibold">Compassion in action</p>
 
                       <p className="mt-0.5 text-xs text-white/75">
-                        Serving every person with dignity and
-                        love
+                        Serving every person with dignity and love
                       </p>
                     </div>
                   </div>
@@ -400,14 +352,11 @@ export function WelfarePage() {
 
               <h2 className="mt-4 font-display text-3xl font-semibold text-foreground sm:text-4xl lg:text-5xl">
                 Compassion expressed through{" "}
-                <span className="text-gradient">
-                  meaningful action
-                </span>
+                <span className="text-gradient">meaningful action</span>
               </h2>
 
               <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-                Select a programme to learn how Premsadan
-                supports individuals, families and
+                Select a programme to learn how Premsadan supports individuals, families and
                 communities.
               </p>
             </div>
@@ -429,8 +378,7 @@ export function WelfarePage() {
             >
               {programmes.map((programme) => {
                 const Icon = programme.Icon;
-                const isActive =
-                  activeProgrammeId === programme.id;
+                const isActive = activeProgrammeId === programme.id;
 
                 return (
                   <motion.button
@@ -440,11 +388,7 @@ export function WelfarePage() {
                     role="tab"
                     aria-selected={isActive}
                     aria-controls={`welfare-panel-${programme.id}`}
-                    onClick={() =>
-                      setActiveProgrammeId(
-                        programme.id,
-                      )
-                    }
+                    onClick={() => setActiveProgrammeId(programme.id)}
                     whileHover={{
                       x: 4,
                     }}
@@ -556,39 +500,34 @@ export function WelfarePage() {
                 </p>
 
                 <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                  {activeProgramme.benefits.map(
-                    (benefit, index) => (
-                      <motion.div
-                        key={benefit}
-                        initial={{
-                          opacity: 0,
-                          y: 10,
-                        }}
-                        animate={{
-                          opacity: 1,
-                          y: 0,
-                        }}
-                        transition={{
-                          delay: index * 0.06,
-                        }}
-                        className="flex items-start gap-3 rounded-2xl border border-border bg-background/60 p-4"
-                      >
-                        <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-                          <CheckCircle2 className="h-3.5 w-3.5" />
-                        </div>
+                  {activeProgramme.benefits.map((benefit, index) => (
+                    <motion.div
+                      key={benefit}
+                      initial={{
+                        opacity: 0,
+                        y: 10,
+                      }}
+                      animate={{
+                        opacity: 1,
+                        y: 0,
+                      }}
+                      transition={{
+                        delay: index * 0.06,
+                      }}
+                      className="flex items-start gap-3 rounded-2xl border border-border bg-background/60 p-4"
+                    >
+                      <div className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+                        <CheckCircle2 className="h-3.5 w-3.5" />
+                      </div>
 
-                        <p className="text-sm leading-6 text-foreground/85">
-                          {benefit}
-                        </p>
-                      </motion.div>
-                    ),
-                  )}
+                      <p className="text-sm leading-6 text-foreground/85">{benefit}</p>
+                    </motion.div>
+                  ))}
                 </div>
 
                 <div className="mt-7 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-xs text-muted-foreground">
-                    Contact the Samithi for activity details
-                    and participation guidance.
+                    Contact the Samithi for activity details and participation guidance.
                   </p>
 
                   <Link
@@ -620,8 +559,7 @@ export function WelfarePage() {
             </h2>
 
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-              Every activity is thoughtfully organised so
-              that support reaches people with care,
+              Every activity is thoughtfully organised so that support reaches people with care,
               responsibility and dignity.
             </p>
           </div>
@@ -630,45 +568,30 @@ export function WelfarePage() {
         <div className="relative mt-10 grid gap-5 md:grid-cols-3">
           <div className="pointer-events-none absolute left-[16%] right-[16%] top-10 hidden h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent md:block" />
 
-          {serviceSteps.map(
-            (
-              {
-                number,
-                title,
-                description,
-                Icon,
-              },
-              index,
-            ) => (
-              <Reveal
-                key={title}
-                delay={index * 0.1}
+          {serviceSteps.map(({ number, title, description, Icon }, index) => (
+            <Reveal key={title} delay={index * 0.1}>
+              <motion.div
+                whileHover={{
+                  y: -7,
+                }}
+                className="group relative h-full rounded-[1.75rem] border border-border bg-card/70 p-6 text-center shadow-sm transition hover:border-primary/30 hover:shadow-xl"
               >
-                <motion.div
-                  whileHover={{
-                    y: -7,
-                  }}
-                  className="group relative h-full rounded-[1.75rem] border border-border bg-card/70 p-6 text-center shadow-sm transition hover:border-primary/30 hover:shadow-xl"
-                >
-                  <div className="relative z-10 mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-primary/20 bg-background text-primary shadow-md transition group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Icon className="h-6 w-6" />
-                  </div>
+                <div className="relative z-10 mx-auto grid h-16 w-16 place-items-center rounded-2xl border border-primary/20 bg-background text-primary shadow-md transition group-hover:bg-primary group-hover:text-primary-foreground">
+                  <Icon className="h-6 w-6" />
+                </div>
 
-                  <span className="mt-5 inline-flex rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-bold tracking-[0.16em] text-primary">
-                    STEP {number}
-                  </span>
+                <span className="mt-5 inline-flex rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-bold tracking-[0.16em] text-primary">
+                  STEP {number}
+                </span>
 
-                  <h3 className="mt-3 font-display text-2xl font-semibold text-foreground">
-                    {title}
-                  </h3>
+                <h3 className="mt-3 font-display text-2xl font-semibold text-foreground">
+                  {title}
+                </h3>
 
-                  <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                    {description}
-                  </p>
-                </motion.div>
-              </Reveal>
-            ),
-          )}
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">{description}</p>
+              </motion.div>
+            </Reveal>
+          ))}
         </div>
       </section>
 
@@ -705,8 +628,7 @@ export function WelfarePage() {
                 </h2>
 
                 <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
-                  Volunteer your time, support a welfare
-                  activity or connect with Premsadan to
+                  Volunteer your time, support a welfare activity or connect with Premsadan to
                   understand how you can participate.
                 </p>
               </div>
@@ -718,16 +640,15 @@ export function WelfarePage() {
                 >
                   <Users className="h-4 w-4" />
                   Volunteer With Us
-
                   <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
                 </Link>
 
                 <Link
-                  to="/donate"
+                  to="/devotee-registration"
                   className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-full border border-border bg-background/70 px-6 py-3 text-sm font-semibold text-foreground shadow-sm transition hover:-translate-y-0.5 hover:border-primary/30 hover:bg-primary/[0.06]"
                 >
                   <Heart className="h-4 w-4 text-primary" />
-                  Support a Seva
+                  Devotee Registration
                 </Link>
               </div>
             </div>

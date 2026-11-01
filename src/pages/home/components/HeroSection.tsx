@@ -1,11 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import {
-  ArrowRight,
-  Heart,
-  MapPin,
-  Users,
-} from "lucide-react";
+import { ArrowRight, Heart, MapPin, Users } from "lucide-react";
 
 import { SITE } from "@/lib/site";
 import { heroImage } from "@/lib/site-images";
@@ -30,8 +25,7 @@ export function HeroSection() {
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-10 opacity-[0.13]"
         style={{
-          backgroundImage:
-            "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
+          backgroundImage: "radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)",
           backgroundSize: "22px 22px",
           color: "hsl(var(--primary))",
         }}
@@ -90,9 +84,7 @@ export function HeroSection() {
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
             </span>
             <span className="shrink-0">🕉</span>
-            <span className="truncate">
-              Om Sri Sai Ram · Welcome to Premsadan
-            </span>
+            <span className="truncate">Om Sri Sai Ram · Welcome to Premsadan</span>
           </motion.div>
 
           <motion.h1
@@ -101,11 +93,9 @@ export function HeroSection() {
             transition={{ duration: 0.6 }}
             className="max-w-[900px] font-display text-[2.45rem] font-semibold leading-[1.03] tracking-[-0.03em] sm:text-5xl lg:text-[4rem] xl:text-[4.7rem] 2xl:text-[5.1rem]"
           >
-            <span className="text-gradient">Love All,</span>{" "}
-            Serve All.
+            <span className="text-gradient">Love All,</span> Serve All.
             <br />
-            <span className="text-gradient">Help Ever,</span>{" "}
-            Hurt Never.
+            <span className="text-gradient">Help Ever,</span> Hurt Never.
           </motion.h1>
 
           <motion.p
@@ -114,9 +104,8 @@ export function HeroSection() {
             transition={{ delay: 0.3 }}
             className="mt-5 max-w-3xl text-[15px] leading-7 text-muted-foreground sm:text-lg sm:leading-8 lg:mt-6 lg:text-[1.08rem]"
           >
-            A spiritual family walking the path of selfless
-            service inspired by Bhagawan Sri Sathya Sai Baba —
-            from our mandir in {SITE.location}.
+            A spiritual family walking the path of selfless service inspired by Bhagawan Sri Sathya
+            Sai Baba — from our mandir in {SITE.location}.
           </motion.p>
 
           <motion.div
@@ -126,12 +115,12 @@ export function HeroSection() {
             className="mt-7 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap lg:mt-8"
           >
             <Link
-              to="/donate"
+              to="/devotee-registration"
               className="group relative col-span-2 inline-flex min-h-12 items-center justify-center gap-2 overflow-hidden rounded-full gradient-saffron px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/30 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/40 sm:col-span-1"
             >
               <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
               <Heart className="h-4 w-4 fill-white" />
-              Donate Now
+              Register as Devotee
             </Link>
 
             <Link
@@ -168,12 +157,8 @@ export function HeroSection() {
                 whileHover={{ y: -2, scale: 1.025 }}
                 className="flex min-w-0 items-center justify-center rounded-full border border-border bg-card/75 px-3 py-2 text-[11px] shadow-sm backdrop-blur transition hover:border-primary/35 sm:justify-start sm:px-4 sm:text-xs"
               >
-                <span className="font-display font-semibold text-primary">
-                  {stat.value}
-                </span>
-                <span className="ml-1.5 truncate text-muted-foreground">
-                  {stat.label}
-                </span>
+                <span className="font-display font-semibold text-primary">{stat.value}</span>
+                <span className="ml-1.5 truncate text-muted-foreground">{stat.label}</span>
               </motion.div>
             ))}
           </motion.div>
@@ -203,9 +188,7 @@ export function HeroSection() {
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                     <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
                   </span>
-                  <span className="text-xs font-medium">
-                    Seva in motion today
-                  </span>
+                  <span className="text-xs font-medium">Seva in motion today</span>
                 </div>
 
                 <motion.div
@@ -251,9 +234,7 @@ export function HeroSection() {
               >
                 <div className="absolute bottom-3 left-3 z-40 flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-white backdrop-blur-md">
                   <Users className="h-3.5 w-3.5 text-sky-300" />
-                  <span className="text-[10px] font-medium sm:text-xs">
-                    500+ sevadals
-                  </span>
+                  <span className="text-[10px] font-medium sm:text-xs">500+ sevadals</span>
                 </div>
               </AutoImageSlider>
             </div>

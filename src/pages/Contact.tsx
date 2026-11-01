@@ -1,14 +1,6 @@
-import {
-  useMemo,
-  useState,
-  type FormEvent,
-} from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { toast } from "sonner";
-import {
-  AnimatePresence,
-  motion,
-  useReducedMotion,
-} from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
   ArrowUpRight,
   Check,
@@ -44,9 +36,7 @@ type ContactForm = {
   message: string;
 };
 
-type FormErrors = Partial<
-  Record<keyof ContactForm, string>
->;
+type FormErrors = Partial<Record<keyof ContactForm, string>>;
 
 const INITIAL_FORM: ContactForm = {
   name: "",
@@ -61,7 +51,6 @@ const CONTACT_REASONS = [
   "Visit the Mandir",
   "Join Seva activities",
   "Bal Vikas enquiry",
-  "Donation enquiry",
   "Volunteer with us",
 ];
 
@@ -71,14 +60,10 @@ const inputClassName =
 export function ContactPage() {
   const shouldReduceMotion = useReducedMotion();
 
-  const [form, setForm] =
-    useState<ContactForm>(INITIAL_FORM);
-  const [errors, setErrors] =
-    useState<FormErrors>({});
-  const [submitting, setSubmitting] =
-    useState(false);
-  const [isSubmitted, setIsSubmitted] =
-    useState(false);
+  const [form, setForm] = useState<ContactForm>(INITIAL_FORM);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const hasPhone = Boolean(SITE.phone?.trim());
   const hasEmail = Boolean(SITE.email?.trim());
@@ -90,15 +75,10 @@ export function ContactPage() {
   }, [hasPhone]);
 
   const mapHref = useMemo(() => {
-    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      SITE.address,
-    )}`;
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(SITE.address)}`;
   }, []);
 
-  const updateField = (
-    field: keyof ContactForm,
-    value: string,
-  ) => {
+  const updateField = (field: keyof ContactForm, value: string) => {
     setForm((current) => ({
       ...current,
       [field]: value,
@@ -116,37 +96,23 @@ export function ContactPage() {
     const nextErrors: FormErrors = {};
 
     if (form.name.trim().length < 2) {
-      nextErrors.name =
-        "Please enter at least 2 characters.";
+      nextErrors.name = "Please enter at least 2 characters.";
     }
 
-    if (
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-        form.email.trim(),
-      )
-    ) {
-      nextErrors.email =
-        "Please enter a valid email address.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+      nextErrors.email = "Please enter a valid email address.";
     }
 
-    if (
-      form.phone.trim() &&
-      !/^[+\d\s()-]{7,20}$/.test(
-        form.phone.trim(),
-      )
-    ) {
-      nextErrors.phone =
-        "Please enter a valid phone number.";
+    if (form.phone.trim() && !/^[+\d\s()-]{7,20}$/.test(form.phone.trim())) {
+      nextErrors.phone = "Please enter a valid phone number.";
     }
 
     if (!form.reason) {
-      nextErrors.reason =
-        "Please select a contact reason.";
+      nextErrors.reason = "Please select a contact reason.";
     }
 
     if (form.message.trim().length < 10) {
-      nextErrors.message =
-        "Please write at least 10 characters.";
+      nextErrors.message = "Please write at least 10 characters.";
     }
 
     setErrors(nextErrors);
@@ -158,16 +124,12 @@ export function ContactPage() {
     event.preventDefault();
 
     if (!validateForm()) {
-      toast.error(
-        "Please check the highlighted fields.",
-      );
+      toast.error("Please check the highlighted fields.");
       return;
     }
 
     if (!hasEmail) {
-      toast.error(
-        "The Samithi email address is not configured yet.",
-      );
+      toast.error("The Samithi email address is not configured yet.");
       return;
     }
 
@@ -176,9 +138,7 @@ export function ContactPage() {
     window.setTimeout(() => {
       setSubmitting(false);
       setIsSubmitted(true);
-      toast.success(
-        "Message prepared! Choose your preferred way to send.",
-      );
+      toast.success("Message prepared! Choose your preferred way to send.");
     }, 400);
   };
 
@@ -190,16 +150,10 @@ export function ContactPage() {
 
   const copyAddress = async () => {
     try {
-      if (
-        navigator.clipboard &&
-        window.isSecureContext
-      ) {
-        await navigator.clipboard.writeText(
-          SITE.address,
-        );
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(SITE.address);
       } else {
-        const textarea =
-          document.createElement("textarea");
+        const textarea = document.createElement("textarea");
 
         textarea.value = SITE.address;
         textarea.style.position = "fixed";
@@ -209,8 +163,7 @@ export function ContactPage() {
         textarea.focus();
         textarea.select();
 
-        const copied =
-          document.execCommand("copy");
+        const copied = document.execCommand("copy");
 
         document.body.removeChild(textarea);
 
@@ -221,9 +174,7 @@ export function ContactPage() {
 
       toast.success("Address copied.");
     } catch {
-      toast.error(
-        "Unable to copy the address.",
-      );
+      toast.error("Unable to copy the address.");
     }
   };
 
@@ -254,10 +205,8 @@ export function ContactPage() {
               </h2>
 
               <p className="mt-4 text-sm leading-7 text-muted-foreground sm:text-base">
-                Our Samithi welcomes everyone with love.
-                Reach out for information about Mandir
-                activities, seva opportunities and spiritual
-                programmes.
+                Our Samithi welcomes everyone with love. Reach out for information about Mandir
+                activities, seva opportunities and spiritual programmes.
               </p>
             </div>
           </Reveal>
@@ -267,11 +216,7 @@ export function ContactPage() {
             <div className="space-y-5">
               <Reveal>
                 <motion.div
-                  whileHover={
-                    shouldReduceMotion
-                      ? undefined
-                      : { y: -4 }
-                  }
+                  whileHover={shouldReduceMotion ? undefined : { y: -4 }}
                   transition={{ duration: 0.3 }}
                   className="overflow-hidden rounded-[2rem] border border-border/70 bg-card p-2 shadow-xl shadow-foreground/5"
                 >
@@ -280,11 +225,7 @@ export function ContactPage() {
                       src={mandir}
                       alt="Premsadan Mandir"
                       loading="lazy"
-                      whileHover={
-                        shouldReduceMotion
-                          ? undefined
-                          : { scale: 1.05 }
-                      }
+                      whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
                       transition={{
                         duration: 0.7,
                         ease: [0.22, 1, 0.36, 1],
@@ -300,13 +241,10 @@ export function ContactPage() {
                         MVP Colony, Visakhapatnam
                       </div>
 
-                      <h3 className="mt-2 font-display text-2xl font-semibold">
-                        Premsadan Mandir
-                      </h3>
+                      <h3 className="mt-2 font-display text-2xl font-semibold">Premsadan Mandir</h3>
 
                       <p className="mt-1 text-sm text-white/75">
-                        A spiritual home for prayer,
-                        learning and selfless service.
+                        A spiritual home for prayer, learning and selfless service.
                       </p>
                     </div>
                   </div>
@@ -316,11 +254,7 @@ export function ContactPage() {
               {/* Convenor */}
               <Reveal delay={0.05}>
                 <motion.article
-                  whileHover={
-                    shouldReduceMotion
-                      ? undefined
-                      : { y: -4 }
-                  }
+                  whileHover={shouldReduceMotion ? undefined : { y: -4 }}
                   className="group relative overflow-hidden rounded-[1.75rem] border border-border/70 bg-card p-6 shadow-sm transition-all hover:border-primary/25 hover:shadow-lg"
                 >
                   <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-primary/5 transition-transform duration-500 group-hover:scale-150" />
@@ -339,9 +273,7 @@ export function ContactPage() {
                         {SITE.convenor}
                       </h3>
 
-                      <p className="mt-1 text-sm font-medium text-muted-foreground">
-                        {SITE.role}
-                      </p>
+                      <p className="mt-1 text-sm font-medium text-muted-foreground">{SITE.role}</p>
 
                       <p className="mt-2 text-sm text-muted-foreground">
                         Premsadan Mandir, MVP Colony
@@ -355,11 +287,7 @@ export function ContactPage() {
               <div className="grid gap-4 sm:grid-cols-2">
                 <Reveal delay={0.08}>
                   <motion.article
-                    whileHover={
-                      shouldReduceMotion
-                        ? undefined
-                        : { y: -5 }
-                    }
+                    whileHover={shouldReduceMotion ? undefined : { y: -5 }}
                     className="h-full rounded-[1.5rem] border border-border/70 bg-card p-5 shadow-sm transition-all hover:border-primary/25 hover:shadow-lg"
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -399,11 +327,7 @@ export function ContactPage() {
 
                 <Reveal delay={0.12}>
                   <motion.article
-                    whileHover={
-                      shouldReduceMotion
-                        ? undefined
-                        : { y: -5 }
-                    }
+                    whileHover={shouldReduceMotion ? undefined : { y: -5 }}
                     className="h-full rounded-[1.5rem] border border-border/70 bg-card p-5 shadow-sm transition-all hover:border-primary/25 hover:shadow-lg"
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -455,9 +379,7 @@ export function ContactPage() {
                         Mandir address
                       </h3>
 
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                        {SITE.address}
-                      </p>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">{SITE.address}</p>
                     </div>
                   </div>
 
@@ -505,8 +427,7 @@ export function ContactPage() {
 
                         <p className="flex items-center gap-2">
                           <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
-                          Bhajans: Thursday and Sunday,
-                          6:30 PM
+                          Bhajans: Thursday and Sunday, 6:30 PM
                         </p>
                       </div>
                     </div>
@@ -542,21 +463,15 @@ export function ContactPage() {
                       </h3>
 
                       <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
-                        Complete the form and your email
-                        application will open with the
-                        message prepared for the Samithi.
+                        Complete the form and your email application will open with the message
+                        prepared for the Samithi.
                       </p>
                     </div>
                   </div>
 
                   <div className="space-y-5 p-6 sm:p-8">
                     <div className="grid gap-5 sm:grid-cols-2">
-                      <FormField
-                        id="contact-name"
-                        label="Your name"
-                        required
-                        error={errors.name}
-                      >
+                      <FormField id="contact-name" label="Your name" required error={errors.name}>
                         <div className="relative">
                           <UserRound className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
 
@@ -565,21 +480,14 @@ export function ContactPage() {
                             type="text"
                             name="premsadan_contact_name"
                             value={form.name}
-                            onChange={(event) =>
-                              updateField(
-                                "name",
-                                event.target.value,
-                              )
-                            }
+                            onChange={(event) => updateField("name", event.target.value)}
                             placeholder="Enter your name"
                             autoComplete="name"
                             autoCorrect="off"
                             spellCheck={false}
                             maxLength={100}
                             disabled={submitting}
-                            aria-invalid={
-                              Boolean(errors.name)
-                            }
+                            aria-invalid={Boolean(errors.name)}
                             className={`${inputClassName} pl-11`}
                           />
                         </div>
@@ -599,19 +507,12 @@ export function ContactPage() {
                             type="tel"
                             name="premsadan_contact_phone"
                             value={form.phone}
-                            onChange={(event) =>
-                              updateField(
-                                "phone",
-                                event.target.value,
-                              )
-                            }
+                            onChange={(event) => updateField("phone", event.target.value)}
                             placeholder="+91"
                             autoComplete="tel"
                             maxLength={20}
                             disabled={submitting}
-                            aria-invalid={
-                              Boolean(errors.phone)
-                            }
+                            aria-invalid={Boolean(errors.phone)}
                             className={`${inputClassName} pl-11`}
                           />
                         </div>
@@ -632,12 +533,7 @@ export function ContactPage() {
                           type="email"
                           name="premsadan_contact_email"
                           value={form.email}
-                          onChange={(event) =>
-                            updateField(
-                              "email",
-                              event.target.value,
-                            )
-                          }
+                          onChange={(event) => updateField("email", event.target.value)}
                           placeholder="you@example.com"
                           autoComplete="email"
                           autoCapitalize="none"
@@ -645,9 +541,7 @@ export function ContactPage() {
                           spellCheck={false}
                           maxLength={255}
                           disabled={submitting}
-                          aria-invalid={
-                            Boolean(errors.email)
-                          }
+                          aria-invalid={Boolean(errors.email)}
                           className={`${inputClassName} pl-11`}
                         />
                       </div>
@@ -663,28 +557,16 @@ export function ContactPage() {
                         id="contact-reason"
                         name="premsadan_contact_reason"
                         value={form.reason}
-                        onChange={(event) =>
-                          updateField(
-                            "reason",
-                            event.target.value,
-                          )
-                        }
+                        onChange={(event) => updateField("reason", event.target.value)}
                         disabled={submitting}
-                        aria-invalid={
-                          Boolean(errors.reason)
-                        }
+                        aria-invalid={Boolean(errors.reason)}
                         className={inputClassName}
                       >
-                        {CONTACT_REASONS.map(
-                          (reason) => (
-                            <option
-                              key={reason}
-                              value={reason}
-                            >
-                              {reason}
-                            </option>
-                          ),
-                        )}
+                        {CONTACT_REASONS.map((reason) => (
+                          <option key={reason} value={reason}>
+                            {reason}
+                          </option>
+                        ))}
                       </select>
                     </FormField>
 
@@ -699,20 +581,13 @@ export function ContactPage() {
                           id="contact-message"
                           name="premsadan_contact_message"
                           value={form.message}
-                          onChange={(event) =>
-                            updateField(
-                              "message",
-                              event.target.value,
-                            )
-                          }
+                          onChange={(event) => updateField("message", event.target.value)}
                           placeholder="Tell us how we can help you..."
                           autoComplete="off"
                           rows={7}
                           maxLength={1000}
                           disabled={submitting}
-                          aria-invalid={
-                            Boolean(errors.message)
-                          }
+                          aria-invalid={Boolean(errors.message)}
                           className={`${inputClassName} min-h-44 resize-y pb-10`}
                         />
 
@@ -725,27 +600,16 @@ export function ContactPage() {
                     <div className="rounded-2xl border border-border/70 bg-muted/30 p-4">
                       <p className="flex items-start gap-2 text-xs leading-5 text-muted-foreground">
                         <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                        Submitting this form opens your
-                        default email application. The
-                        website does not store your message.
+                        Submitting this form opens your default email application. The website does
+                        not store your message.
                       </p>
                     </div>
 
                     <motion.button
                       type="submit"
                       disabled={submitting}
-                      whileHover={
-                        shouldReduceMotion ||
-                        submitting
-                          ? undefined
-                          : { y: -2 }
-                      }
-                      whileTap={
-                        shouldReduceMotion ||
-                        submitting
-                          ? undefined
-                          : { scale: 0.98 }
-                      }
+                      whileHover={shouldReduceMotion || submitting ? undefined : { y: -2 }}
+                      whileTap={shouldReduceMotion || submitting ? undefined : { scale: 0.98 }}
                       className="group inline-flex w-full items-center justify-center gap-2 rounded-full gradient-saffron px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:opacity-95 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {submitting ? (
@@ -792,14 +656,7 @@ type FormFieldProps = {
   children: React.ReactNode;
 };
 
-function FormField({
-  id,
-  label,
-  required,
-  hint,
-  error,
-  children,
-}: FormFieldProps) {
+function FormField({ id, label, required, hint, error, children }: FormFieldProps) {
   return (
     <div className="block">
       <label
@@ -809,27 +666,16 @@ function FormField({
         <span>
           {label}
 
-          {required && (
-            <span className="ml-1 text-destructive">
-              *
-            </span>
-          )}
+          {required && <span className="ml-1 text-destructive">*</span>}
         </span>
 
-        {hint && (
-          <span className="text-xs font-normal text-muted-foreground">
-            {hint}
-          </span>
-        )}
+        {hint && <span className="text-xs font-normal text-muted-foreground">{hint}</span>}
       </label>
 
       {children}
 
       {error && (
-        <span
-          role="alert"
-          className="mt-1.5 block text-xs font-medium text-destructive"
-        >
+        <span role="alert" className="mt-1.5 block text-xs font-medium text-destructive">
           {error}
         </span>
       )}
@@ -912,7 +758,9 @@ function ContactSuccessModal({
           </h3>
 
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Your message has been prepared for <strong className="text-foreground">{SITE.email}</strong>. Choose how you would like to send it:
+            Your message has been prepared for{" "}
+            <strong className="text-foreground">{SITE.email}</strong>. Choose how you would like to
+            send it:
           </p>
 
           <div className="mt-6 w-full space-y-3">

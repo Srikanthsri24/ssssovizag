@@ -6,18 +6,16 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       {
-        title:
-          "Contact — Sri Sathya Sai Seva Samithi, Premsadan",
+        title: "Contact — Sri Sathya Sai Seva Samithi, Premsadan",
       },
       {
         name: "description",
         content:
-          "Contact Sri Sathya Sai Seva Samithi at Premsadan Mandir, MVP Colony, Visakhapatnam for seva, Bal Vikas, donations and spiritual programmes.",
+          "Contact Sri Sathya Sai Seva Samithi at Premsadan Mandir, MVP Colony, Visakhapatnam for seva, Bal Vikas, devotee registrations and spiritual programmes.",
       },
       {
         property: "og:title",
-        content:
-          "Contact Sri Sathya Sai Seva Samithi, Premsadan",
+        content: "Contact Sri Sathya Sai Seva Samithi, Premsadan",
       },
       {
         property: "og:description",

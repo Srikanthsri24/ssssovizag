@@ -1,7 +1,6 @@
 export { HomePage } from "./Home";
 export { AboutPage } from "./About";
 export { ContactPage } from "./Contact";
-export { DonatePage } from "./Donate";
 export { EducationPage } from "./Education";
 export { EventsPage } from "./Events";
 export { GalleryPage } from "./Gallery";

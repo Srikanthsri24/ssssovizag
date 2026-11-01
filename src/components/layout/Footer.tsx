@@ -30,13 +30,7 @@ import {
 import { useState, type FormEvent } from "react";
 import { toast } from "sonner";
 
-import {
-  NAV,
-  NAV_TAIL,
-  QUOTES,
-  SEVA_NAV,
-  SITE,
-} from "@/lib/site";
+import { NAV, NAV_TAIL, QUOTES, SEVA_NAV, SITE } from "@/lib/site";
 import { LOGO } from "@/lib/site-images";
 
 const footerItemAnimation = {
@@ -84,19 +78,14 @@ export function Footer() {
 
   const currentYear = new Date().getFullYear();
 
-  const phoneLink = String(SITE.phone ?? "").replace(
-    /[^\d+]/g,
-    "",
-  );
+  const phoneLink = String(SITE.phone ?? "").replace(/[^\d+]/g, "");
 
   const mapLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     SITE.address,
   )}`;
 
   const exploreLinks = [...NAV, ...NAV_TAIL].filter(
-    (item, index, links) =>
-      links.findIndex((link) => link.to === item.to) ===
-      index,
+    (item, index, links) => links.findIndex((link) => link.to === item.to) === index,
   );
 
   const socialLinks = [
@@ -117,9 +106,7 @@ export function Footer() {
     },
   ];
 
-  const handleSubscribe = (
-    event: FormEvent<HTMLFormElement>,
-  ) => {
+  const handleSubscribe = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const cleanEmail = email.trim();
@@ -129,9 +116,7 @@ export function Footer() {
       return;
     }
 
-    toast.success(
-      "Subscribed successfully. Seva updates will be shared with you.",
-    );
+    toast.success("Subscribed successfully. Seva updates will be shared with you.");
 
     setEmail("");
   };
@@ -200,8 +185,7 @@ export function Footer() {
                 </h2>
 
                 <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
-                  Get information about bhajans, healthcare
-                  camps, educational service, welfare
+                  Get information about bhajans, healthcare camps, educational service, welfare
                   activities, and upcoming events.
                 </p>
               </div>
@@ -215,9 +199,7 @@ export function Footer() {
 
               <input
                 value={email}
-                onChange={(event) =>
-                  setEmail(event.target.value)
-                }
+                onChange={(event) => setEmail(event.target.value)}
                 type="email"
                 placeholder="Enter your email address"
                 aria-label="Email address"
@@ -235,9 +217,7 @@ export function Footer() {
                 }}
                 className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-sm transition-shadow hover:shadow-md"
               >
-                <span className="hidden sm:inline">
-                  Subscribe
-                </span>
+                <span className="hidden sm:inline">Subscribe</span>
 
                 <Send className="h-4 w-4" />
               </motion.button>
@@ -260,14 +240,8 @@ export function Footer() {
         className="relative mx-auto grid max-w-[1400px] gap-10 px-5 py-14 sm:px-8 md:grid-cols-2 lg:grid-cols-12 lg:px-10"
       >
         {/* Organisation details */}
-        <motion.div
-          variants={footerItemAnimation}
-          className="lg:col-span-4 lg:pr-6"
-        >
-          <Link
-            to="/"
-            className="group inline-flex items-center gap-4"
-          >
+        <motion.div variants={footerItemAnimation} className="lg:col-span-4 lg:pr-6">
+          <Link to="/" className="group inline-flex items-center gap-4">
             <motion.div
               whileHover={{
                 rotate: 4,
@@ -294,17 +268,14 @@ export function Footer() {
                 {SITE.name}
               </h3>
 
-              <p className="mt-1 text-sm text-muted-foreground">
-                {SITE.location}
-              </p>
+              <p className="mt-1 text-sm text-muted-foreground">{SITE.location}</p>
             </div>
           </Link>
 
           <p className="mt-6 max-w-md text-sm leading-7 text-muted-foreground">
-            A spiritual family walking the path of selfless
-            service inspired by Bhagawan Sri Sathya Sai Baba,
-            serving society through education, healthcare,
-            welfare, and spiritual activities.
+            A spiritual family walking the path of selfless service inspired by Bhagawan Sri Sathya
+            Sai Baba, serving society through education, healthcare, welfare, and spiritual
+            activities.
           </p>
 
           {/* Quote card */}
@@ -326,9 +297,7 @@ export function Footer() {
                 “{QUOTES[0].text}”
               </p>
 
-              <p className="mt-3 text-xs font-semibold text-primary">
-                — {QUOTES[0].by}
-              </p>
+              <p className="mt-3 text-xs font-semibold text-primary">— {QUOTES[0].by}</p>
             </motion.div>
           )}
 
@@ -355,14 +324,8 @@ export function Footer() {
         </motion.div>
 
         {/* Explore links */}
-        <motion.div
-          variants={footerItemAnimation}
-          className="lg:col-span-2"
-        >
-          <FooterHeading
-            Icon={Navigation}
-            title="Explore"
-          />
+        <motion.div variants={footerItemAnimation} className="lg:col-span-2">
+          <FooterHeading Icon={Navigation} title="Explore" />
 
           <ul className="space-y-1.5">
             {exploreLinks.map((item) => {
@@ -378,9 +341,7 @@ export function Footer() {
                       <Icon className="h-4 w-4" />
                     </span>
 
-                    <span className="flex-1">
-                      {item.label}
-                    </span>
+                    <span className="flex-1">{item.label}</span>
 
                     <ChevronRight className="h-3.5 w-3.5 -translate-x-2 text-primary opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" />
                   </Link>
@@ -390,14 +351,14 @@ export function Footer() {
 
             <li>
               <Link
-                to="/donate"
+                to="/devotee-registration"
                 className="group flex items-center gap-3 rounded-xl px-2 py-2.5 text-sm font-semibold text-primary transition-all duration-300 hover:translate-x-1 hover:bg-primary/[0.08]"
               >
                 <span className="grid h-8 w-8 place-items-center rounded-lg bg-primary/10 text-primary">
                   <Heart className="h-4 w-4 fill-current" />
                 </span>
 
-                <span className="flex-1">Donate</span>
+                <span className="flex-1">Register</span>
 
                 <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
@@ -406,14 +367,8 @@ export function Footer() {
         </motion.div>
 
         {/* Seva links */}
-        <motion.div
-          variants={footerItemAnimation}
-          className="lg:col-span-2"
-        >
-          <FooterHeading
-            Icon={HeartHandshake}
-            title="Our Seva"
-          />
+        <motion.div variants={footerItemAnimation} className="lg:col-span-2">
+          <FooterHeading Icon={HeartHandshake} title="Our Seva" />
 
           <ul className="space-y-1.5">
             {SEVA_NAV.map((item) => {
@@ -429,9 +384,7 @@ export function Footer() {
                       <Icon className="h-4 w-4" />
                     </span>
 
-                    <span className="flex-1">
-                      {item.label}
-                    </span>
+                    <span className="flex-1">{item.label}</span>
 
                     <ChevronRight className="h-3.5 w-3.5 -translate-x-2 text-primary opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100" />
                   </Link>
@@ -442,14 +395,8 @@ export function Footer() {
         </motion.div>
 
         {/* Contact section */}
-        <motion.div
-          variants={footerItemAnimation}
-          className="lg:col-span-4"
-        >
-          <FooterHeading
-            Icon={Phone}
-            title="Contact Us"
-          />
+        <motion.div variants={footerItemAnimation} className="lg:col-span-4">
+          <FooterHeading Icon={Phone} title="Contact Us" />
 
           <div className="space-y-3">
             <ContactCard
@@ -475,7 +422,7 @@ export function Footer() {
             />
           </div>
 
-          {/* Donate action */}
+          {/* Registration action */}
           <motion.div
             whileHover={{
               y: -3,
@@ -491,23 +438,20 @@ export function Footer() {
               </div>
 
               <div>
-                <h4 className="font-semibold text-foreground">
-                  Support our seva activities
-                </h4>
+                <h4 className="font-semibold text-foreground">Join our spiritual family</h4>
 
                 <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                  Your contribution supports education,
-                  healthcare, welfare, and community service.
+                  Register as a devotee, active sevadal, or Balvikas Guru and stay connected.
                 </p>
               </div>
             </div>
 
             <Link
-              to="/donate"
+              to="/devotee-registration"
               className="group mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
             >
               <Heart className="h-4 w-4 fill-current" />
-              Support Our Mission
+              Register as Devotee
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </motion.div>
@@ -519,8 +463,7 @@ export function Footer() {
         <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-4 px-5 py-5 text-center sm:px-8 md:flex-row md:text-left lg:px-10">
           <div>
             <p className="text-xs text-muted-foreground">
-              © {currentYear} {SITE.name}. All rights
-              reserved.
+              © {currentYear} {SITE.name}. All rights reserved.
             </p>
 
             <p className="mt-1 text-[11px] text-muted-foreground/70">
@@ -554,7 +497,6 @@ export function Footer() {
               aria-label="Scroll to top"
             >
               Back to top
-
               <ArrowUp className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-translate-y-0.5" />
             </motion.button>
           </div>
@@ -569,10 +511,7 @@ type FooterHeadingProps = {
   title: string;
 };
 
-function FooterHeading({
-  Icon,
-  title,
-}: FooterHeadingProps) {
+function FooterHeading({ Icon, title }: FooterHeadingProps) {
   return (
     <div className="mb-5 flex items-center gap-3">
       <span className="grid h-9 w-9 place-items-center rounded-xl bg-primary/10 text-primary ring-1 ring-primary/10">
@@ -598,13 +537,7 @@ type ContactCardProps = {
   external?: boolean;
 };
 
-function ContactCard({
-  href,
-  label,
-  value,
-  Icon,
-  external = false,
-}: ContactCardProps) {
+function ContactCard({ href, label, value, Icon, external = false }: ContactCardProps) {
   return (
     <motion.a
       href={href}

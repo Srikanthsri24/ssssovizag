@@ -487,7 +487,7 @@ export function Header() {
             className="hidden sm:block"
           >
             <Link
-              to="/donate"
+              to="/devotee-registration"
               className={`group relative inline-flex items-center gap-2 overflow-hidden rounded-full gradient-saffron px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-primary/20 ${focusRing}`}
             >
               <span className="absolute inset-y-0 -left-10 w-8 rotate-12 bg-white/30 blur-md transition-all duration-700 group-hover:left-[115%]" />
@@ -509,7 +509,7 @@ export function Header() {
                 <Heart className="h-4 w-4 fill-current" />
               </motion.span>
 
-              <span>Donate</span>
+              <span>Register</span>
             </Link>
           </motion.div>
 
@@ -780,7 +780,7 @@ export function Header() {
 
                 <div className="mt-2 border-t border-border/70 p-2 pt-3">
                   <Link
-                    to="/donate"
+                    to="/devotee-registration"
                     onClick={closeAllMenus}
                     className={`group flex items-center justify-between overflow-hidden rounded-2xl gradient-saffron px-4 py-3.5 text-white shadow-lg shadow-primary/20 ${focusRing}`}
                   >
@@ -790,9 +790,11 @@ export function Header() {
                       </span>
 
                       <span>
-                        <span className="block text-sm font-semibold">Make a Donation</span>
+                        <span className="block text-sm font-semibold">Devotee Registrations</span>
 
-                        <span className="block text-xs text-white/75">Support seva with love</span>
+                        <span className="block text-xs text-white/75">
+                          Join our spiritual family
+                        </span>
                       </span>
                     </span>
 
