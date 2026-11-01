@@ -5,19 +5,13 @@ import {
   Check,
   CheckCircle2,
   ClipboardList,
-  Download,
   FileSpreadsheet,
   Heart,
   ShieldCheck,
   UserRoundPlus,
 } from "lucide-react";
 import { MANDALIS } from "@/lib/bhajan-mandalis";
-import {
-  makeDemoReceipt,
-  registrationSchema,
-  SHEET_COLUMNS,
-  type Registration,
-} from "@/lib/devotee-registration";
+import { makeDemoReceipt, registrationSchema, type Registration } from "@/lib/devotee-registration";
 import { shrine1 } from "@/lib/site-images";
 
 type Receipt = ReturnType<typeof makeDemoReceipt>;
@@ -35,31 +29,6 @@ const input =
 const primary =
   "inline-flex items-center justify-center gap-2 rounded-full gradient-saffron px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/15 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
 
-function sheetRow(r: Receipt) {
-  return [
-    r.id,
-    new Date(r.submittedAt).toLocaleString("en-IN"),
-    r.name,
-    r.phone,
-    r.email || "—",
-    MANDALIS.find((m) => m.slug === r.mandali)?.name || r.mandali,
-    r.category,
-    r.locality,
-    "Yes",
-  ];
-}
-function download(r: Receipt) {
-  const escape = (value: string) =>
-    '"' + value.replace(/^[=+@\-\t\r]/, "'$&").replaceAll('"', '""') + '"';
-  const csv =
-    "\uFEFF" + [SHEET_COLUMNS, sheetRow(r)].map((row) => row.map(escape).join(",")).join("\r\n");
-  const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8;" }));
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "devotee-registration-demo.csv";
-  a.click();
-  URL.revokeObjectURL(url);
-}
 export function DevoteeRegistrationPage() {
   const [form, setForm] = useState(empty);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -176,9 +145,7 @@ export function DevoteeRegistrationPage() {
               This is how the confirmation will appear after registration. This demo has not
               submitted your details to the Samithi or Google Sheets.
             </p>
-            <p className="mt-4 text-sm font-medium">
-              Demo reference: <span className="text-primary">{receipt.id}</span>
-            </p>
+
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <button
                 className={primary}
@@ -189,13 +156,6 @@ export function DevoteeRegistrationPage() {
                 }}
               >
                 Try another registration <ArrowRight className="h-4 w-4" />
-              </button>
-              <button
-                className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-3 text-sm font-semibold"
-                onClick={() => download(receipt)}
-              >
-                <Download className="h-4 w-4" />
-                Download demo row
               </button>
             </div>
           </section>
