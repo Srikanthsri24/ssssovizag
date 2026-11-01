@@ -1,7 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { UserRoundPlus, ArrowUpRight } from "lucide-react";
 export function FloatingRegistration() {
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const pathname = useRouterState({ select: (state) => state.location.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ""), "") || "/" });
   if (pathname === "/devotee-registration") return null;
   return (
     <Link

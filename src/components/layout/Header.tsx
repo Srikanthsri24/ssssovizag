@@ -33,7 +33,7 @@ const focusRing =
 
 export function Header() {
   const pathname = useRouterState({
-    select: (state) => state.location.pathname,
+    select: (state) => state.location.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ""), "") || "/",
   });
 
   const shouldReduceMotion = useReducedMotion();

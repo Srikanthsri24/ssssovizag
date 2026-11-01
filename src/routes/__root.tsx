@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import {
   HeadContent,
+  Link,
   Outlet,
   Scripts,
   createRootRouteWithContext,
@@ -32,12 +33,12 @@ function NotFoundComponent() {
           The page you're looking for doesn't exist.
         </p>
 
-        <a
-          href="/"
+        <Link
+          to="/"
           className="mt-6 inline-flex rounded-full gradient-saffron px-5 py-2.5 text-sm font-semibold text-white"
         >
           Go home
-        </a>
+        </Link>
       </div>
     </main>
   );
@@ -151,7 +152,7 @@ export const Route = createRootRouteWithContext<{
       },
       {
         rel: "icon",
-        href: "/logo.png",
+        href: `${import.meta.env.BASE_URL}logo.png`,
         type: "image/png",
       },
       {

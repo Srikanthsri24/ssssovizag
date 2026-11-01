@@ -16,7 +16,7 @@ export function MandaliNavigation({
   mobile?: boolean;
   onNavigate?: () => void;
 }) {
-  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const pathname = useRouterState({ select: (state) => state.location.pathname.replace(import.meta.env.BASE_URL.replace(/\/$/, ""), "") || "/" });
   const [open, setOpen] = useState(false);
   useEffect(() => {
     setOpen(false);
