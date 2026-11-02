@@ -1,6 +1,6 @@
 // Bound to City Samithi DB. Only appends registration rows; never returns registrant data.
 const SPREADSHEET_ID = '140173DevRMJVly0v2Uo8Z9o3wT5QzFTjz5W-tF3PZcQ';
-const HEADERS = ['Submission ID','Submitted At','Name','Gender','Age','Date of Birth','Email ID','Highest education qualification','Current profession','Special skills'];
+const HEADERS = ['Submission ID','Submitted At','Name','Gender','Age','Date of Birth','Email ID','Highest education qualification','Current profession','Special skills','Bhajan Mandali / City Samithi','City Samithi groups'];
 function jsonResponse(value) {
   return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(ContentService.MimeType.JSON);
 }
@@ -16,6 +16,9 @@ function doPost(e) {
     const id = text(data.submissionId,36), ageText = typeof data.age === 'string' ? data.age.trim() : '', dob = text(data.dob,8);
     if (!/^[a-f0-9-]{36}$/i.test(id) || name.length < 2 || !['Female','Male','Other','Prefer not to say'].includes(data.gender) || !validBirthDate(dob,ageText)) throw new Error('Please check name, gender, age and date of birth.');
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Invalid email.');
+    const community = text(data.community,100), groups = data.groups === undefined ? [] : data.groups;
+    if (community && !COMMUNITY_OPTIONS.includes(community)) throw new Error('Invalid Bhajan Mandali or City Samithi.');
+    if (!Array.isArray(groups) || groups.length>4 || groups.some(g=>!CITY_GROUPS.includes(g)) || (community !== 'City Samithi' && groups.length)) throw new Error('Invalid City Samithi groups.');
     lock = LockService.getScriptLock(); lock.waitLock(20000);
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Devotee Registrations');
     if (!sheet) throw new Error('Registration sheet is unavailable.');
@@ -23,7 +26,7 @@ function doPost(e) {
     if (current.some((value,i)=>value!==HEADERS[i])) throw new Error('Registration sheet columns have changed. Please contact the Samithi.');
     if (sheet.getLastRow()>1 && sheet.getRange(2,1,sheet.getLastRow()-1,1).createTextFinder(id).matchEntireCell(true).findNext()) return jsonResponse({ok:true,submissionId:id});
     const safe = value => /^[=+@\-\t\r]/.test(value) ? "'"+value : value;
-    sheet.appendRow([id,Utilities.formatDate(new Date(),'Asia/Kolkata','yyyy-MM-dd HH:mm:ss'),safe(name),data.gender,Number(ageText),"'"+dob,safe(email),safe(text(data.education,200)),safe(text(data.profession,200)),safe(text(data.skills,1000))]);
+    sheet.appendRow([id,Utilities.formatDate(new Date(),'Asia/Kolkata','yyyy-MM-dd HH:mm:ss'),safe(name),data.gender,Number(ageText),"'"+dob,safe(email),safe(text(data.education,200)),safe(text(data.profession,200)),safe(text(data.skills,1000)),community,[...new Set(groups)].join(', ')]);
     SpreadsheetApp.flush();
     return jsonResponse({ok:true,submissionId:id});
   } catch(error) { return jsonResponse({ok:false,error:error.message || 'Could not save registration.'}); }
@@ -45,3 +48,6 @@ function validBirthDate(dob, ageText) {
     return actualAge===age;
   });
 }
+
+const COMMUNITY_OPTIONS = ['MVP Colony','Lawsons Bay Colony','Waltair Uplands','Seethammadhara','Nakkavanipalem','HB Colony','Arilova','Sagar Nagar','Yendada','Vishalakshi Nagar','City Samithi'];
+const CITY_GROUPS = ['Singers Group','Balvikas Group','Youth Wing','Sevadal'];

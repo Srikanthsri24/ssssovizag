@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { MANDALIS } from "./bhajan-mandalis";
+export const COMMUNITY_OPTIONS = [...MANDALIS.slice(0, 10).map((m) => m.name), "City Samithi"];
+export const CITY_GROUPS = ["Singers Group", "Balvikas Group", "Youth Wing", "Sevadal"] as const;
 
 export const GENDERS = ["Female", "Male", "Other", "Prefer not to say"] as const;
 export function validBirthDate(dob: string, ageText: string, today = new Date()) {
@@ -27,6 +30,13 @@ export function validBirthDate(dob: string, ageText: string, today = new Date())
 }
 export const registrationSchema = z
   .object({
+    community: z
+      .string()
+      .refine(
+        (value) => value === "" || COMMUNITY_OPTIONS.includes(value),
+        "Select a valid Mandali or City Samithi.",
+      ),
+    groups: z.array(z.enum(CITY_GROUPS)).max(4),
     name: z.string().trim().min(2, "Enter your full name.").max(100),
     gender: z.enum(GENDERS, { errorMap: () => ({ message: "Select your gender." }) }),
     age: z
@@ -47,6 +57,12 @@ export const registrationSchema = z
     skills: z.string().trim().max(1000),
   })
   .superRefine((data, ctx) => {
+    if (data.community !== "City Samithi" && data.groups.length)
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["groups"],
+        message: "Groups apply to City Samithi only.",
+      });
     if (!validBirthDate(data.dob, data.age))
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

@@ -1,7 +1,7 @@
 # Devotee registrations → City Samithi DB
 
 The destination is the existing spreadsheet `140173DevRMJVly0v2Uo8Z9o3wT5QzFTjz5W-tF3PZcQ`, tab `Devotee Registrations`.
-Headers A1:J1 must match the `HEADERS` constant in Code.gs. Do not reorder them without updating the receiver.
+Headers A1:L1 must match the `HEADERS` constant in Code.gs. Do not reorder them without updating the receiver.
 
 ## Setup
 
@@ -21,3 +21,5 @@ The receiver validates required fields and finite options, serializes writes usi
 Changing script code requires deploying a new version through Manage deployments; pushing Code.gs to GitHub alone does not update Google's running receiver.
 
 Required fields: Name, Gender, Age (completed years), Date of Birth (`dd/mm/yy`). Optional: Email ID, Highest education qualification, Current profession, Special skills. The old Sheet1 tab contains the earlier connection test and is preserved.
+
+Optional community selection: the ten Bhajan Mandalis or City Samithi. City Samithi supports multiple groups: Singers Group, Balvikas Group, Youth Wing and Sevadal. These are saved in columns K:L; older rows remain unchanged.

@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import {
   GENDERS,
+  COMMUNITY_OPTIONS,
+  CITY_GROUPS,
   registrationSchema,
   registrationEndpoint,
   sendRegistration,
@@ -20,6 +22,8 @@ import {
 import { shrine1 } from "@/lib/site-images";
 
 const empty = {
+  community: "",
+  groups: [] as string[],
   name: "",
   gender: "",
   age: "",
@@ -41,8 +45,12 @@ export function DevoteeRegistrationPage() {
   const [submitError, setSubmitError] = useState("");
   const submissionId = useRef(crypto.randomUUID());
   const live = Boolean(registrationEndpoint);
-  function update(key: keyof typeof empty, value: string) {
-    setForm((current) => ({ ...current, [key]: value }));
+  function update(key: keyof typeof empty, value: string | string[]) {
+    setForm((current) => ({
+      ...current,
+      [key]: value,
+      ...(key === "community" ? { groups: [] } : {}),
+    }));
     setErrors((current) => ({ ...current, [key]: "", ...(key === "age" ? { dob: "" } : {}) }));
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -73,7 +81,7 @@ export function DevoteeRegistrationPage() {
     }
   }
   const field = (
-    key: Exclude<keyof typeof empty, "gender" | "skills">,
+    key: Exclude<keyof typeof empty, "gender" | "skills" | "community" | "groups">,
     label: string,
     placeholder: string,
     required = false,
@@ -202,6 +210,63 @@ export function DevoteeRegistrationPage() {
                     Name, gender, age and date of birth are required.
                   </p>
                 </div>
+              </div>
+              <div className="mb-7 space-y-5">
+                <div>
+                  <label htmlFor="community" className="text-sm font-medium">
+                    Bhajan Mandali / City Samithi{" "}
+                    <span className="text-xs text-muted-foreground">(optional)</span>
+                  </label>
+                  <select
+                    id="community"
+                    value={form.community}
+                    disabled={submitting}
+                    onChange={(e) => update("community", e.target.value)}
+                    className={input}
+                  >
+                    <option value="">Select Bhajan Mandali or City Samithi</option>
+                    {COMMUNITY_OPTIONS.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                {form.community === "City Samithi" && (
+                  <fieldset className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
+                    <legend className="px-1 text-sm font-medium">
+                      City Samithi groups{" "}
+                      <span className="text-xs text-muted-foreground">(optional)</span>
+                    </legend>
+                    <p className="mb-3 text-xs text-muted-foreground">
+                      Select all groups that apply.
+                    </p>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {CITY_GROUPS.map((group) => (
+                        <label
+                          key={group}
+                          className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-card p-3 text-sm"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={form.groups.includes(group)}
+                            disabled={submitting}
+                            onChange={(e) =>
+                              update(
+                                "groups",
+                                e.target.checked
+                                  ? [...form.groups, group]
+                                  : form.groups.filter((g) => g !== group),
+                              )
+                            }
+                            className="h-4 w-4 accent-primary"
+                          />
+                          {group}
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                )}
               </div>
               <div className="grid gap-6 sm:grid-cols-2">
                 {field("name", "Name", "Your full name", true)}
