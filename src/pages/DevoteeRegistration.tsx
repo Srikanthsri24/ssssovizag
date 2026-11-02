@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { Link } from "@tanstack/react-router";
 import {
   ArrowRight,
@@ -11,7 +11,13 @@ import {
   UserRoundPlus,
 } from "lucide-react";
 import { MANDALIS } from "@/lib/bhajan-mandalis";
-import { makeDemoReceipt, registrationSchema, type Registration } from "@/lib/devotee-registration";
+import {
+  makeDemoReceipt,
+  registrationSchema,
+  registrationEndpoint,
+  sendRegistration,
+  type Registration,
+} from "@/lib/devotee-registration";
 import { shrine1 } from "@/lib/site-images";
 
 type Receipt = ReturnType<typeof makeDemoReceipt>;
@@ -33,12 +39,18 @@ export function DevoteeRegistrationPage() {
   const [form, setForm] = useState(empty);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const submissionId = useRef(crypto.randomUUID());
+  const live = Boolean(registrationEndpoint);
   function update(key: keyof typeof empty, value: string | boolean) {
     setForm((current) => ({ ...current, [key]: value }));
     setErrors((current) => ({ ...current, [key]: "" }));
   }
-  function submit(event: FormEvent<HTMLFormElement>) {
+  async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting) return;
+    setSubmitError("");
     const result = registrationSchema.safeParse(form);
     if (!result.success) {
       const next: Record<string, string> = {};
@@ -49,8 +61,18 @@ export function DevoteeRegistrationPage() {
       );
       return;
     }
-    setReceipt(makeDemoReceipt(result.data));
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    setSubmitting(true);
+    try {
+      if (live) await sendRegistration(result.data, submissionId.current);
+      setReceipt(makeDemoReceipt(result.data));
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } catch {
+      setSubmitError(
+        "We could not confirm that your registration was saved. Please retry without changing your details, or contact the Samithi if this continues.",
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
   const field = (
     key: "name" | "phone" | "email" | "locality",
@@ -118,17 +140,19 @@ export function DevoteeRegistrationPage() {
         </div>
       </section>
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
-        <div
-          role="note"
-          className="my-7 flex items-start gap-3 rounded-2xl border border-primary/25 bg-primary/5 p-4 text-sm"
-        >
-          <FileSpreadsheet className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-          <p className="leading-6">
-            <strong className="font-semibold">Demo preview</strong> · Google Sheet connection is
-            pending. Use sample details to try the form. Nothing is sent or saved to Google Sheets;
-            entered details remain only on this page until you refresh or leave.
-          </p>
-        </div>
+        {!live && (
+          <div
+            role="note"
+            className="my-7 flex items-start gap-3 rounded-2xl border border-primary/25 bg-primary/5 p-4 text-sm"
+          >
+            <FileSpreadsheet className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
+            <p className="leading-6">
+              <strong className="font-semibold">Demo preview</strong> · Google Sheet connection is
+              pending. Use sample details to try the form. Nothing is sent or saved to Google
+              Sheets; entered details remain only on this page until you refresh or leave.
+            </p>
+          </div>
+        )}
         {receipt ? (
           <section
             aria-live="polite"
@@ -138,18 +162,20 @@ export function DevoteeRegistrationPage() {
               <CheckCircle2 className="h-9 w-9" />
             </span>
             <p className="mt-5 text-xs font-semibold uppercase tracking-widest text-primary">
-              Registration preview complete
+              {live ? "Registration complete" : "Registration preview complete"}
             </p>
             <h2 className="mt-3 font-display text-3xl font-semibold">Thank you, {receipt.name}!</h2>
             <p className="mx-auto mt-4 max-w-lg leading-7 text-muted-foreground">
-              This is how the confirmation will appear after registration. This demo has not
-              submitted your details to the Samithi or Google Sheets.
+              {live
+                ? "Your registration has been saved. Thank you for joining our spiritual family."
+                : "This is how the confirmation will appear after registration. This demo has not submitted your details to the Samithi or Google Sheets."}
             </p>
 
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <button
                 className={primary}
                 onClick={() => {
+                  submissionId.current = crypto.randomUUID();
                   setReceipt(null);
                   setForm(empty);
                   setErrors({});
@@ -253,11 +279,27 @@ export function DevoteeRegistrationPage() {
                   {errors.consent}
                 </p>
               )}
-              <button type="submit" className={`${primary} mt-7 w-full`}>
-                Preview registration <ArrowRight className="h-4 w-4" />
+              {submitError && (
+                <p role="alert" className="mt-5 text-sm text-destructive">
+                  {submitError}
+                </p>
+              )}
+              <button
+                type="submit"
+                disabled={submitting}
+                className={`${primary} mt-7 w-full disabled:opacity-60`}
+              >
+                {submitting
+                  ? "Saving registration…"
+                  : live
+                    ? "Submit registration"
+                    : "Preview registration"}{" "}
+                <ArrowRight className="h-4 w-4" />
               </button>
               <p className="mt-3 text-center text-xs text-muted-foreground">
-                Demo only · No data is transmitted
+                {live
+                  ? "Your details are shared with the Samithi for registration and contact."
+                  : "Demo only · No data is transmitted"}
               </p>
             </form>
             <aside className="space-y-5">

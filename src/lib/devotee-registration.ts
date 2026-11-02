@@ -41,3 +41,23 @@ export const SHEET_COLUMNS = [
   "Locality",
   "Contact Consent",
 ];
+
+export const registrationEndpoint = import.meta.env.VITE_REGISTRATION_ENDPOINT?.trim() || "";
+export async function sendRegistration(data: Registration, submissionId: string) {
+  if (
+    !/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(registrationEndpoint)
+  ) {
+    throw new Error("Registration connection is not configured.");
+  }
+  const response = await fetch(registrationEndpoint, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify({ ...data, submissionId }),
+    redirect: "follow",
+    signal: AbortSignal.timeout(45000),
+  });
+  const result = await response.json();
+  if (!response.ok || result.ok !== true || result.submissionId !== submissionId) {
+    throw new Error(result.error || "We could not confirm your registration. Please try again.");
+  }
+}

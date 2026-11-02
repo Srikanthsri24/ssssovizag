@@ -23,6 +23,8 @@ jobs:
       - run: npm ci
       - run: npx tsc --noEmit
       - run: npm run build:pages
+        env:
+          VITE_REGISTRATION_ENDPOINT: ${{ vars.VITE_REGISTRATION_ENDPOINT }}
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
