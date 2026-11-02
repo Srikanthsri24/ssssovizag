@@ -22,4 +22,4 @@ Changing script code requires deploying a new version through Manage deployments
 
 Required fields: Name, Gender, Age (completed years), Date of Birth (`dd/mm/yy`). Optional: Email ID, Highest education qualification, Current profession, Special skills. The old Sheet1 tab contains the earlier connection test and is preserved.
 
-Optional community selection: the ten Bhajan Mandalis or City Samithi. City Samithi supports multiple groups: Singers Group, Balvikas Group, Youth Wing and Sevadal. These are saved in columns K:L; older rows remain unchanged.
+Required community selection: the ten Bhajan Mandalis or City Samithi. City Samithi supports multiple groups: Singers Group, Balvikas Group, Youth Wing, Sevadal and Spiritual Wing. These are saved in columns K:L; older rows remain unchanged.

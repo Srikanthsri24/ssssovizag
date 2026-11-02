@@ -207,18 +207,20 @@ export function DevoteeRegistrationPage() {
                 <div>
                   <h2 className="font-display text-2xl font-semibold">Your registration details</h2>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Name, gender, age and date of birth are required.
+                    Bhajan Mandali / City Samithi, name, gender, age and date of birth are required.
                   </p>
                 </div>
               </div>
               <div className="mb-7 space-y-5">
                 <div>
                   <label htmlFor="community" className="text-sm font-medium">
-                    Bhajan Mandali / City Samithi{" "}
-                    <span className="text-xs text-muted-foreground">(optional)</span>
+                    Bhajan Mandali / City Samithi <span className="text-primary">*</span>
                   </label>
                   <select
                     id="community"
+                    required
+                    aria-invalid={!!errors.community}
+                    aria-describedby={errors.community ? "community-error" : undefined}
                     value={form.community}
                     disabled={submitting}
                     onChange={(e) => update("community", e.target.value)}
@@ -231,6 +233,11 @@ export function DevoteeRegistrationPage() {
                       </option>
                     ))}
                   </select>
+                  {errors.community && (
+                    <p id="community-error" className="mt-1.5 text-xs text-destructive">
+                      {errors.community}
+                    </p>
+                  )}
                 </div>
                 {form.community === "City Samithi" && (
                   <fieldset className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
