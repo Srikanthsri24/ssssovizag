@@ -10,9 +10,8 @@ import {
   ShieldCheck,
   UserRoundPlus,
 } from "lucide-react";
-import { MANDALIS } from "@/lib/bhajan-mandalis";
 import {
-  makeDemoReceipt,
+  GENDERS,
   registrationSchema,
   registrationEndpoint,
   sendRegistration,
@@ -20,32 +19,31 @@ import {
 } from "@/lib/devotee-registration";
 import { shrine1 } from "@/lib/site-images";
 
-type Receipt = ReturnType<typeof makeDemoReceipt>;
 const empty = {
   name: "",
-  phone: "",
+  gender: "",
+  age: "",
+  dob: "",
   email: "",
-  mandali: "",
-  category: "Devotee" as Registration["category"],
-  locality: "",
-  consent: false,
+  education: "",
+  profession: "",
+  skills: "",
 };
 const input =
-  "mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 aria-invalid:border-destructive";
+  "mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-base text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 aria-invalid:border-destructive sm:text-sm disabled:opacity-60";
 const primary =
-  "inline-flex items-center justify-center gap-2 rounded-full gradient-saffron px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/15 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2";
-
+  "inline-flex items-center justify-center gap-2 rounded-full gradient-saffron px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-primary/15 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-60";
 export function DevoteeRegistrationPage() {
   const [form, setForm] = useState(empty);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [receipt, setReceipt] = useState<Receipt | null>(null);
+  const [registered, setRegistered] = useState<Registration | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const submissionId = useRef(crypto.randomUUID());
   const live = Boolean(registrationEndpoint);
-  function update(key: keyof typeof empty, value: string | boolean) {
+  function update(key: keyof typeof empty, value: string) {
     setForm((current) => ({ ...current, [key]: value }));
-    setErrors((current) => ({ ...current, [key]: "" }));
+    setErrors((current) => ({ ...current, [key]: "", ...(key === "age" ? { dob: "" } : {}) }));
   }
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -64,7 +62,7 @@ export function DevoteeRegistrationPage() {
     setSubmitting(true);
     try {
       if (live) await sendRegistration(result.data, submissionId.current);
-      setReceipt(makeDemoReceipt(result.data));
+      setRegistered(result.data);
       window.scrollTo({ top: 0, behavior: "smooth" });
     } catch {
       setSubmitError(
@@ -75,18 +73,20 @@ export function DevoteeRegistrationPage() {
     }
   }
   const field = (
-    key: "name" | "phone" | "email" | "locality",
+    key: Exclude<keyof typeof empty, "gender" | "skills">,
     label: string,
     placeholder: string,
-    required = true,
+    required = false,
   ) => (
     <div>
       <label htmlFor={key} className="text-sm font-medium">
         {label}
-        {required && (
+        {required ? (
           <span className="ml-1 text-primary" aria-hidden="true">
             *
           </span>
+        ) : (
+          <span className="ml-1 text-xs text-muted-foreground">(optional)</span>
         )}
       </label>
       <input
@@ -96,22 +96,24 @@ export function DevoteeRegistrationPage() {
         onChange={(e) => update(key, e.target.value)}
         placeholder={placeholder}
         required={required}
-        maxLength={key === "phone" ? 10 : key === "locality" ? 150 : 100}
-        type={key === "email" ? "email" : key === "phone" ? "tel" : "text"}
-        inputMode={key === "phone" ? "numeric" : undefined}
+        disabled={submitting}
+        type={key === "email" ? "email" : "text"}
+        inputMode={key === "age" ? "numeric" : undefined}
+        maxLength={
+          key === "age" ? 3 : key === "dob" ? 8 : key === "name" ? 100 : key === "email" ? 150 : 200
+        }
         autoComplete={
-          key === "name"
-            ? "name"
-            : key === "phone"
-              ? "tel-national"
-              : key === "email"
-                ? "email"
-                : "address-level2"
+          key === "name" ? "name" : key === "email" ? "email" : key === "dob" ? "bday" : undefined
         }
         className={input}
         aria-invalid={!!errors[key]}
-        aria-describedby={errors[key] ? `${key}-error` : undefined}
+        aria-describedby={errors[key] ? `${key}-error` : key === "dob" ? "dob-help" : undefined}
       />
+      {key === "dob" && (
+        <p id="dob-help" className="mt-1.5 text-xs text-muted-foreground">
+          Day / month / two-digit year, e.g. 15/08/90. Enter your age in completed years.
+        </p>
+      )}
       {errors[key] && (
         <p id={`${key}-error`} className="mt-1.5 text-xs text-destructive">
           {errors[key]}
@@ -139,21 +141,20 @@ export function DevoteeRegistrationPage() {
           </p>
         </div>
       </section>
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+      <div className="mx-auto max-w-6xl px-5 pt-8 sm:px-8">
         {!live && (
           <div
             role="note"
-            className="my-7 flex items-start gap-3 rounded-2xl border border-primary/25 bg-primary/5 p-4 text-sm"
+            className="mb-7 flex gap-3 rounded-2xl border border-primary/25 bg-primary/5 p-4 text-sm"
           >
-            <FileSpreadsheet className="mt-0.5 h-5 w-5 shrink-0 text-primary" />
-            <p className="leading-6">
-              <strong className="font-semibold">Demo preview</strong> · Google Sheet connection is
-              pending. Use sample details to try the form. Nothing is sent or saved to Google
-              Sheets; entered details remain only on this page until you refresh or leave.
+            <FileSpreadsheet className="h-5 w-5 shrink-0 text-primary" />
+            <p>
+              <strong>Demo preview</strong> · Registration is not connected. Use sample details;
+              nothing is transmitted or saved.
             </p>
           </div>
         )}
-        {receipt ? (
+        {registered ? (
           <section
             aria-live="polite"
             className="rounded-3xl border border-border bg-card p-7 text-center shadow-sm sm:p-10"
@@ -164,26 +165,25 @@ export function DevoteeRegistrationPage() {
             <p className="mt-5 text-xs font-semibold uppercase tracking-widest text-primary">
               {live ? "Registration complete" : "Registration preview complete"}
             </p>
-            <h2 className="mt-3 font-display text-3xl font-semibold">Thank you, {receipt.name}!</h2>
+            <h2 className="mt-3 font-display text-3xl font-semibold">
+              Thank you, {registered.name}!
+            </h2>
             <p className="mx-auto mt-4 max-w-lg leading-7 text-muted-foreground">
               {live
                 ? "Your registration has been saved. Thank you for joining our spiritual family."
-                : "This is how the confirmation will appear after registration. This demo has not submitted your details to the Samithi or Google Sheets."}
+                : "This is a preview only. Your details have not been submitted to the Samithi."}
             </p>
-
-            <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <button
-                className={primary}
-                onClick={() => {
-                  submissionId.current = crypto.randomUUID();
-                  setReceipt(null);
-                  setForm(empty);
-                  setErrors({});
-                }}
-              >
-                Try another registration <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
+            <button
+              className={`${primary} mt-7`}
+              onClick={() => {
+                submissionId.current = crypto.randomUUID();
+                setRegistered(null);
+                setForm(empty);
+                setErrors({});
+              }}
+            >
+              Try another registration <ArrowRight className="h-4 w-4" />
+            </button>
           </section>
         ) : (
           <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
@@ -199,108 +199,84 @@ export function DevoteeRegistrationPage() {
                 <div>
                   <h2 className="font-display text-2xl font-semibold">Your registration details</h2>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Fields marked * are required.
+                    Name, gender, age and date of birth are required.
                   </p>
                 </div>
               </div>
               <div className="grid gap-6 sm:grid-cols-2">
-                {field("name", "Full name", "e.g. Sai Kumar")}
-                {field("phone", "Mobile number", "10-digit Indian mobile number")}
-                {field("email", "Email address", "you@example.com", false)}
-                {field("locality", "Locality / area", "e.g. MVP Colony")}
-                <div className="sm:col-span-2">
-                  <label htmlFor="mandali" className="text-sm font-medium">
-                    Bhajan Mandali / group <span className="text-primary">*</span>
+                {field("name", "Name", "Your full name", true)}
+                <div>
+                  <label htmlFor="gender" className="text-sm font-medium">
+                    Gender <span className="text-primary">*</span>
                   </label>
                   <select
-                    id="mandali"
+                    id="gender"
+                    name="gender"
                     required
-                    value={form.mandali}
-                    onChange={(e) => update("mandali", e.target.value)}
+                    disabled={submitting}
+                    value={form.gender}
+                    onChange={(e) => update("gender", e.target.value)}
                     className={input}
-                    aria-invalid={!!errors.mandali}
-                    aria-describedby={errors.mandali ? "mandali-error" : undefined}
+                    aria-invalid={!!errors.gender}
+                    aria-describedby={errors.gender ? "gender-error" : undefined}
                   >
-                    <option value="">Select your Mandali or City Samithi group</option>
-                    {MANDALIS.map((m) => (
-                      <option key={m.slug} value={m.slug}>
-                        {m.name}
+                    <option value="">Select gender</option>
+                    {GENDERS.map((g) => (
+                      <option key={g} value={g}>
+                        {g}
                       </option>
                     ))}
                   </select>
-                  {errors.mandali && (
-                    <p id="mandali-error" className="mt-1.5 text-xs text-destructive">
-                      {errors.mandali}
+                  {errors.gender && (
+                    <p id="gender-error" className="mt-1.5 text-xs text-destructive">
+                      {errors.gender}
                     </p>
                   )}
                 </div>
-                <fieldset className="sm:col-span-2">
-                  <legend className="text-sm font-medium">
-                    Register as <span className="text-primary">*</span>
-                  </legend>
-                  <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                    {(["Devotee", "Active Sevadal", "Balvikas Guru"] as const).map((category) => (
-                      <label
-                        key={category}
-                        className={`flex cursor-pointer items-center gap-2 rounded-xl border p-3 text-sm transition ${form.category === category ? "border-primary bg-primary/5 text-primary" : "border-border"}`}
-                      >
-                        <input
-                          type="radio"
-                          name="category"
-                          value={category}
-                          checked={form.category === category}
-                          onChange={() => update("category", category)}
-                          className="accent-primary"
-                        />
-                        {category}
-                      </label>
-                    ))}
-                  </div>
-                </fieldset>
+                {field("age", "Age", "Completed years", true)}
+                {field("dob", "Date of Birth", "dd/mm/yy", true)}
+                {field("email", "Email ID", "you@example.com")}
+                {field(
+                  "education",
+                  "Highest education qualification",
+                  "e.g. Graduate, Postgraduate",
+                )}
+                {field("profession", "Current profession", "e.g. Teacher, Student, Retired")}
+                <div className="sm:col-span-2">
+                  <label htmlFor="skills" className="text-sm font-medium">
+                    Special skills <span className="text-xs text-muted-foreground">(optional)</span>
+                  </label>
+                  <textarea
+                    id="skills"
+                    value={form.skills}
+                    onChange={(e) => update("skills", e.target.value)}
+                    disabled={submitting}
+                    maxLength={1000}
+                    rows={3}
+                    placeholder="Singing, playing musical instruments, or other skills you would like to share"
+                    className={`${input} resize-y`}
+                    aria-invalid={!!errors.skills}
+                  />
+                </div>
               </div>
-              <label className="mt-7 flex items-start gap-3 text-sm leading-6">
-                <input
-                  id="consent"
-                  type="checkbox"
-                  checked={form.consent}
-                  onChange={(e) => update("consent", e.target.checked)}
-                  required
-                  className="mt-1 h-4 w-4 shrink-0 accent-primary"
-                  aria-invalid={!!errors.consent}
-                  aria-describedby={errors.consent ? "consent-error" : undefined}
-                />
-                <span>
-                  I agree that the Samithi may use my registration details to contact me about
-                  spiritual and seva activities. <span className="text-primary">*</span>
-                </span>
-              </label>
-              {errors.consent && (
-                <p id="consent-error" className="mt-1.5 text-xs text-destructive">
-                  {errors.consent}
-                </p>
-              )}
+              <p className="mt-6 text-xs leading-6 text-muted-foreground">
+                By submitting, you agree that the Samithi may use these details to maintain its
+                devotee register and contact you about spiritual and seva activities. Optional
+                details can be left blank.
+              </p>
               {submitError && (
                 <p role="alert" className="mt-5 text-sm text-destructive">
                   {submitError}
                 </p>
               )}
-              <button
-                type="submit"
-                disabled={submitting}
-                className={`${primary} mt-7 w-full disabled:opacity-60`}
-              >
+              <button type="submit" disabled={submitting} className={`${primary} mt-6 w-full`}>
                 {submitting
                   ? "Saving registration…"
                   : live
                     ? "Submit registration"
-                    : "Preview registration"}{" "}
+                    : "Preview registration"}
                 <ArrowRight className="h-4 w-4" />
               </button>
-              <p className="mt-3 text-center text-xs text-muted-foreground">
-                {live
-                  ? "Your details are shared with the Samithi for registration and contact."
-                  : "Demo only · No data is transmitted"}
-              </p>
             </form>
             <aside className="space-y-5">
               <div className="rounded-3xl border border-border bg-card p-7">
@@ -309,17 +285,16 @@ export function DevoteeRegistrationPage() {
                   One family. Many ways to serve.
                 </h2>
                 <p className="mt-3 text-sm leading-7 text-muted-foreground">
-                  Join as a devotee, offer your time as an active sevadal, or share human values as
-                  a Balvikas Guru.
+                  Share your interests and talents, and stay connected with our spiritual family.
                 </p>
                 <div className="mt-5 space-y-3">
                   {[
-                    "Choose your local Mandali",
-                    "Share your contact details",
-                    "Stay connected with the Samithi",
+                    "Share your basic details",
+                    "Add your education and profession if you wish",
+                    "Tell us about your special skills",
                   ].map((t) => (
                     <p key={t} className="flex items-center gap-2 text-sm">
-                      <Check className="h-4 w-4 text-primary" />
+                      <Check className="h-4 w-4 shrink-0 text-primary" />
                       {t}
                     </p>
                   ))}
@@ -329,8 +304,8 @@ export function DevoteeRegistrationPage() {
                 <ShieldCheck className="h-7 w-7 text-primary" />
                 <h3 className="mt-3 font-semibold">Shared with care</h3>
                 <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                  The completed connection will send registrations to the Samithi’s designated
-                  Google Sheet. Registration details will not appear in a public list on this site.
+                  Your registration details are shared with the Samithi. They will not appear in a
+                  public list on this website.
                 </p>
                 <Link
                   to="/contact"
