@@ -5,7 +5,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
-  base: process.env.GITHUB_PAGES === "true" ? "/ssssovizag/" : "/",
+  base: "/",
   plugins: [
     tanstackRouter({
       target: "react",
