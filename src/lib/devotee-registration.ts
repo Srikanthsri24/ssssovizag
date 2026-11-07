@@ -54,15 +54,27 @@ export const registrationSchema = z
       .string()
       .trim()
       .regex(/^\d{2}\/\d{2}\/\d{2}$/, "Enter date of birth as dd/mm/yy."),
-    email: z.union([
-      z.literal(""),
-      z.string().trim().email("Enter a valid email address.").max(150),
-    ]),
-    education: z.string().trim().max(200),
-    profession: z.string().trim().max(200),
-    skills: z.string().trim().max(1000),
+    email: z
+      .string()
+      .trim()
+      .min(1, "Enter your email ID.")
+      .email("Enter a valid email address.")
+      .max(150),
+    education: z.string().trim().min(1, "Enter your highest education qualification.").max(200),
+    profession: z.string().trim().min(1, "Enter your current profession.").max(200),
+    skills: z
+      .string()
+      .trim()
+      .min(1, "Enter your special skills, or None if not applicable.")
+      .max(1000),
   })
   .superRefine((data, ctx) => {
+    if (data.community === "City Samithi" && !data.groups.length)
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["groups"],
+        message: "Select at least one City Samithi group.",
+      });
     if (data.community !== "City Samithi" && data.groups.length)
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

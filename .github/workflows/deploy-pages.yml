@@ -22,6 +22,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx tsc --noEmit
+      - run: node tests/registration-receiver.cjs
       - run: npm run build:pages
         env:
           VITE_REGISTRATION_ENDPOINT: ${{ vars.VITE_REGISTRATION_ENDPOINT }}

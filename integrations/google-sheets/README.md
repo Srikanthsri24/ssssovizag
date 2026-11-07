@@ -20,6 +20,8 @@ The receiver validates required fields and finite options, serializes writes usi
 
 Changing script code requires deploying a new version through Manage deployments; pushing Code.gs to GitHub alone does not update Google's running receiver.
 
-Required fields: Name, Gender, Age (completed years), Date of Birth (`dd/mm/yy`). Optional: Email ID, Highest education qualification, Current profession, Special skills. The old Sheet1 tab contains the earlier connection test and is preserved.
+Required fields: Bhajan Mandali / City Samithi, Name, Gender, Age (completed years), Date of Birth (`dd/mm/yy`), Email ID, Highest education qualification, Current profession, and Special skills. The old Sheet1 tab contains the earlier connection test and is preserved.
 
 Required community selection: the ten Bhajan Mandalis or City Samithi. City Samithi supports multiple groups: Singers Group, Balvikas Group, Youth Wing, Sevadal and Spiritual Wing. These are saved in columns K:L; older rows remain unchanged.
+
+All visible registration fields are now required, including email, education, profession and skills. City Samithi registrants must choose at least one group. Enter None for special skills if applicable.

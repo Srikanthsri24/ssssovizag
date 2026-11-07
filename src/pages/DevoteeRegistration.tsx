@@ -84,18 +84,14 @@ export function DevoteeRegistrationPage() {
     key: Exclude<keyof typeof empty, "gender" | "skills" | "community" | "groups">,
     label: string,
     placeholder: string,
-    required = false,
+    required = true,
   ) => (
     <div>
       <label htmlFor={key} className="text-sm font-medium">
         {label}
-        {required ? (
-          <span className="ml-1 text-primary" aria-hidden="true">
-            *
-          </span>
-        ) : (
-          <span className="ml-1 text-xs text-muted-foreground">(optional)</span>
-        )}
+        <span className="ml-1 text-primary" aria-hidden="true">
+          *
+        </span>
       </label>
       <input
         id={key}
@@ -206,9 +202,7 @@ export function DevoteeRegistrationPage() {
                 </span>
                 <div>
                   <h2 className="font-display text-2xl font-semibold">Your registration details</h2>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    Bhajan Mandali / City Samithi, name, gender, age and date of birth are required.
-                  </p>
+                  <p className="mt-1 text-xs text-muted-foreground">All fields are required.</p>
                 </div>
               </div>
               <div className="mb-7 space-y-5">
@@ -242,11 +236,10 @@ export function DevoteeRegistrationPage() {
                 {form.community === "City Samithi" && (
                   <fieldset className="rounded-2xl border border-primary/20 bg-primary/5 p-4">
                     <legend className="px-1 text-sm font-medium">
-                      City Samithi groups{" "}
-                      <span className="text-xs text-muted-foreground">(optional)</span>
+                      City Samithi groups <span className="text-primary">*</span>
                     </legend>
                     <p className="mb-3 text-xs text-muted-foreground">
-                      Select all groups that apply.
+                      Select at least one group. You can choose more than one.
                     </p>
                     <div className="grid gap-3 sm:grid-cols-2">
                       {CITY_GROUPS.map((group) => (
@@ -272,6 +265,11 @@ export function DevoteeRegistrationPage() {
                         </label>
                       ))}
                     </div>
+                    {errors.groups && (
+                      <p role="alert" className="mt-3 text-xs text-destructive">
+                        {errors.groups}
+                      </p>
+                    )}
                   </fieldset>
                 )}
               </div>
@@ -316,10 +314,12 @@ export function DevoteeRegistrationPage() {
                 {field("profession", "Current profession", "e.g. Teacher, Student, Retired")}
                 <div className="sm:col-span-2">
                   <label htmlFor="skills" className="text-sm font-medium">
-                    Special skills <span className="text-xs text-muted-foreground">(optional)</span>
+                    Special skills <span className="text-primary">*</span>
                   </label>
                   <textarea
                     id="skills"
+                    required
+                    aria-describedby={errors.skills ? "skills-error" : "skills-help"}
                     value={form.skills}
                     onChange={(e) => update("skills", e.target.value)}
                     disabled={submitting}
@@ -329,12 +329,19 @@ export function DevoteeRegistrationPage() {
                     className={`${input} resize-y`}
                     aria-invalid={!!errors.skills}
                   />
+                  <p id="skills-help" className="mt-1.5 text-xs text-muted-foreground">
+                    Enter None if you have no special skills to list.
+                  </p>
+                  {errors.skills && (
+                    <p id="skills-error" className="mt-1.5 text-xs text-destructive">
+                      {errors.skills}
+                    </p>
+                  )}
                 </div>
               </div>
               <p className="mt-6 text-xs leading-6 text-muted-foreground">
                 By submitting, you agree that the Samithi may use these details to maintain its
-                devotee register and contact you about spiritual and seva activities. Optional
-                details can be left blank.
+                devotee register and contact you about spiritual and seva activities.
               </p>
               {submitError && (
                 <p role="alert" className="mt-5 text-sm text-destructive">
@@ -362,7 +369,7 @@ export function DevoteeRegistrationPage() {
                 <div className="mt-5 space-y-3">
                   {[
                     "Share your basic details",
-                    "Add your education and profession if you wish",
+                    "Add your education and profession",
                     "Tell us about your special skills",
                   ].map((t) => (
                     <p key={t} className="flex items-center gap-2 text-sm">

@@ -15,10 +15,11 @@ function doPost(e) {
     const name = text(data.name,100), email = text(data.email,150);
     const id = text(data.submissionId,36), ageText = typeof data.age === 'string' ? data.age.trim() : '', dob = text(data.dob,8);
     if (!/^[a-f0-9-]{36}$/i.test(id) || name.length < 2 || !['Female','Male','Other','Prefer not to say'].includes(data.gender) || !validBirthDate(dob,ageText)) throw new Error('Please check name, gender, age and date of birth.');
-    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Invalid email.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Invalid email.');
+    if (!text(data.education,200) || !text(data.profession,200) || !text(data.skills,1000)) throw new Error('Education, profession and special skills are required.');
     const community = text(data.community,100), groups = data.groups === undefined ? [] : data.groups;
     if (!COMMUNITY_OPTIONS.includes(community)) throw new Error('Invalid Bhajan Mandali or City Samithi.');
-    if (!Array.isArray(groups) || groups.length>CITY_GROUPS.length || groups.some(g=>!CITY_GROUPS.includes(g)) || (community !== 'City Samithi' && groups.length)) throw new Error('Invalid City Samithi groups.');
+    if (!Array.isArray(groups) || groups.length>CITY_GROUPS.length || groups.some(g=>!CITY_GROUPS.includes(g)) || (community !== 'City Samithi' && groups.length) || (community === 'City Samithi' && !groups.length)) throw new Error('Invalid City Samithi groups.');
     lock = LockService.getScriptLock(); lock.waitLock(20000);
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName('Devotee Registrations');
     if (!sheet) throw new Error('Registration sheet is unavailable.');
