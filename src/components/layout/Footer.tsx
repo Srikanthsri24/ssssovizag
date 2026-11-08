@@ -461,7 +461,7 @@ export function Footer() {
 
       {/* Bottom copyright bar */}
       <div className="relative border-t border-border bg-card/50 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-4 px-5 py-5 text-center sm:px-8 md:flex-row md:text-left lg:px-10">
+        <div className="mx-auto flex max-w-[1400px] flex-col items-center justify-between gap-4 px-5 pb-28 pt-5 text-center sm:px-8 md:flex-row md:text-left lg:px-10">
           <div>
             <p className="text-xs text-muted-foreground">
               © {currentYear} {SITE.name}. All rights reserved.
