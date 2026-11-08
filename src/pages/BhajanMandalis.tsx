@@ -302,7 +302,7 @@ export function BhajanMandaliPage({ mandali: m }: { mandali: Mandali }) {
             to="/bhajan-mandalis"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-primary"
           >
-            <ArrowLeft className="h-4 w-4" /> All 12 communities
+            <ArrowLeft className="h-4 w-4" /> All Bhajan Mandalis
           </Link>
           <Link
             to="/bhajan-mandalis/$slug"

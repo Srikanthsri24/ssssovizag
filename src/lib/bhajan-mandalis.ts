@@ -1,4 +1,4 @@
-export const MANDALIS = [
+const COMMUNITIES = [
   {
     name: "MVP Colony",
     slug: "mvp-colony",
@@ -107,3 +107,5 @@ export const MANDALIS = [
     kind: "office",
   },
 ] as const;
+
+export const MANDALIS = COMMUNITIES.filter((community): boolean => community.kind === "mandali");
