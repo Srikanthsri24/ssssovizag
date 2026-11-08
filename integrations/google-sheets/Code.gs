@@ -15,7 +15,7 @@ function doPost(e) {
     const name = text(data.name,100), email = text(data.email,150);
     const id = text(data.submissionId,36), ageText = typeof data.age === 'string' ? data.age.trim() : '', dob = text(data.dob,8);
     if (!/^[a-f0-9-]{36}$/i.test(id) || name.length < 2 || !['Female','Male','Other','Prefer not to say'].includes(data.gender) || !validBirthDate(dob,ageText)) throw new Error('Please check name, gender, age and date of birth.');
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Invalid email.');
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error('Invalid email.');
     if (!text(data.education,200) || !text(data.profession,200) || !text(data.skills,1000)) throw new Error('Education, profession and special skills are required.');
     const community = text(data.community,100), groups = data.groups === undefined ? [] : data.groups;
     if (!COMMUNITY_OPTIONS.includes(community)) throw new Error('Invalid Bhajan Mandali or City Samithi.');

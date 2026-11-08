@@ -57,9 +57,8 @@ export const registrationSchema = z
     email: z
       .string()
       .trim()
-      .min(1, "Enter your email ID.")
-      .email("Enter a valid email address.")
-      .max(150),
+      .max(150)
+      .refine((value) => value === "" || z.string().email().safeParse(value).success, "Enter a valid email address."),
     education: z.string().trim().min(1, "Enter your highest education qualification.").max(200),
     profession: z.string().trim().min(1, "Enter your current profession.").max(200),
     skills: z

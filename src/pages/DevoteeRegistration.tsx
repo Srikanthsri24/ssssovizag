@@ -89,9 +89,7 @@ export function DevoteeRegistrationPage() {
     <div>
       <label htmlFor={key} className="text-sm font-medium">
         {label}
-        <span className="ml-1 text-primary" aria-hidden="true">
-          *
-        </span>
+        {required && <span className="ml-1 text-primary" aria-hidden="true">*</span>}
       </label>
       <input
         id={key}
@@ -202,7 +200,7 @@ export function DevoteeRegistrationPage() {
                 </span>
                 <div>
                   <h2 className="font-display text-2xl font-semibold">Your registration details</h2>
-                  <p className="mt-1 text-xs text-muted-foreground">All fields are required.</p>
+                  <p className="mt-1 text-xs text-muted-foreground">All fields except email are required.</p>
                 </div>
               </div>
               <div className="mb-7 space-y-5">
@@ -305,7 +303,7 @@ export function DevoteeRegistrationPage() {
                 </div>
                 {field("age", "Age", "Completed years", true)}
                 {field("dob", "Date of Birth", "dd/mm/yy", true)}
-                {field("email", "Email ID", "you@example.com")}
+                {field("email", "Email ID (optional)", "you@example.com", false)}
                 {field(
                   "education",
                   "Highest education qualification",
