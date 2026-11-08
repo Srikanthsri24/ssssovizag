@@ -6,7 +6,7 @@ export const SITE = {
   role: "Convenor, City Samithi",
   address:
     "Adarsh Nagar Road, Near TTD Kalyana Mandapam, Sector 8, MVP Colony, Visakhapatnam, Andhra Pradesh – 530017",
-  email: "premsadan.mvp@saiorganisation.org",
+  email: "vizagsaiyouth@gmail.com",
   phone: "+91 00000 00000",
   subdomain: "mvp_premsadan",
 };
