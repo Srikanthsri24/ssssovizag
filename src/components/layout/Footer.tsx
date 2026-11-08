@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import {
   Activity,
   ArrowRight,
+  ArrowUpRight,
   ArrowUp,
   BookOpen,
   CalendarDays,
@@ -472,17 +473,27 @@ export function Footer() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3">
-            <p className="text-xs text-muted-foreground">
-              Powered by{" "}
-              <a
-                href="https://visionariesai.com/"
-                target="_blank"
-                rel="noreferrer"
-                className="font-semibold text-primary transition-colors hover:text-primary/80 hover:underline"
-              >
-                VisionariesAI Labs
-              </a>
-            </p>
+            <a
+              href="https://visionariesai.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Powered by VisionariesAI Labs — visit website (opens in a new tab)"
+              className="group relative inline-flex max-w-full items-center gap-3 overflow-hidden rounded-2xl border border-primary/25 bg-gradient-to-br from-primary/10 via-card to-primary/5 px-4 py-3 text-left shadow-sm transition duration-300 hover:border-primary/50 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-background motion-safe:hover:-translate-y-0.5"
+            >
+              <span aria-hidden="true" className="relative grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-orange-400 text-primary-foreground shadow-sm">
+                <span className="text-xl font-bold tracking-tighter">V</span>
+                <Sparkles className="absolute -right-1 -top-1 h-4 w-4 rounded-full bg-card p-0.5 text-primary" />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[9px] font-semibold uppercase tracking-[0.22em] text-muted-foreground">Powered by</span>
+                <span className="mt-0.5 block text-sm font-semibold tracking-tight text-foreground sm:text-base">
+                  Visionaries<span className="text-primary">AI</span> <span className="font-normal text-muted-foreground">Labs</span>
+                </span>
+              </span>
+              <span aria-hidden="true" className="ml-1 grid h-7 w-7 shrink-0 place-items-center rounded-full border border-primary/15 bg-background/70 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                <ArrowUpRight className="h-3.5 w-3.5" />
+              </span>
+            </a>
 
             <motion.button
               type="button"
