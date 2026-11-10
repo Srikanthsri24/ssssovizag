@@ -49,6 +49,7 @@ export function DevoteeRegistrationPage() {
   const submissionId = useRef(crypto.randomUUID());
   const live = Boolean(registrationEndpoint);
   function update(key: keyof typeof empty, value: string | string[]) {
+    if (key === "contact" && !/^\d{0,10}$/.test(String(value))) return;
     setForm((current) => ({
       ...current,
       [key]: value,
@@ -104,9 +105,11 @@ export function DevoteeRegistrationPage() {
         type={key === "email" ? "email" : key === "dob" ? "date" : key === "contact" ? "tel" : "text"}
         readOnly={key === "age"}
         max={key === "dob" ? todayISO() : undefined}
-        inputMode={key === "age" ? "numeric" : undefined}
+        inputMode={key === "age" || key === "contact" ? "numeric" : undefined}
+        pattern={key === "contact" ? "[6-9][0-9]{9}" : undefined}
+        onBlur={key === "contact" ? () => setErrors((current) => ({...current, contact: /^[6-9]\d{9}$/.test(form.contact) ? "" : "Enter a valid 10-digit mobile number starting with 6, 7, 8 or 9."})) : undefined}
         maxLength={
-          key === "age" ? 3 : key === "dob" ? 10 : key === "contact" ? 15 : key === "name" ? 100 : key === "email" ? 150 : 200
+          key === "age" ? 3 : key === "dob" ? 10 : key === "contact" ? 10 : key === "name" ? 100 : key === "email" ? 150 : 200
         }
         autoComplete={
           key === "contact" ? "tel" : key === "name" ? "name" : key === "email" ? "email" : key === "dob" ? "bday" : undefined
@@ -309,7 +312,7 @@ export function DevoteeRegistrationPage() {
                 {field("age", "Age (completed years)", "Calculated from date of birth", true)}
                 <div className="sm:col-span-2">
                   {field("contact", "Contact number", "10-digit WhatsApp number", true)}
-                  <p className="mt-1.5 text-xs text-muted-foreground">Please provide your WhatsApp number so the Samithi can contact you.</p>
+                  <p className="mt-1.5 text-xs text-muted-foreground">Enter your 10-digit WhatsApp number without +91 or spaces so the Samithi can contact you.</p>
                 </div>
                 {field("email", "Email ID (optional)", "you@example.com", false)}
                 {field(

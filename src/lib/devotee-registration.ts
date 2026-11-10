@@ -38,7 +38,7 @@ export const registrationSchema = z
         "Select a valid Mandali or City Samithi.",
       ),
     groups: z.array(z.enum(CITY_GROUPS)).max(CITY_GROUPS.length),
-    contact: z.string().trim().regex(/^(?:\+?91[ -]?)?[6-9]\d{9}$/, "Enter a valid 10-digit WhatsApp number (optionally with +91)."),
+    contact: z.string().trim().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit mobile number starting with 6, 7, 8 or 9."),
     name: z.string().trim().min(2, "Enter your full name.").max(100),
     gender: z.enum(GENDERS, { errorMap: () => ({ message: "Select your gender." }) }),
     age: z
