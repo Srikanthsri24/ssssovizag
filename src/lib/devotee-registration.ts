@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { MANDALIS } from "./bhajan-mandalis";
-export const COMMUNITY_OPTIONS = ["Devotee", ...MANDALIS.slice(0, 10).map((m) => m.name), "City Samithi"];
+export const COMMUNITY_OPTIONS = [...MANDALIS.slice(0, 10).map((m) => m.name), "City Samithi"];
 export const CITY_GROUPS = [
+  "Devotee",
   "Singers Group",
   "Balvikas Group",
   "Youth Wing",

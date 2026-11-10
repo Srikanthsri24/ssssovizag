@@ -20,9 +20,9 @@ The receiver validates required fields and finite options, serializes writes usi
 
 Changing script code requires deploying a new version through Manage deployments; pushing Code.gs to GitHub alone does not update Google's running receiver.
 
-Required fields: Devotee / Bhajan Mandali / City Samithi, Name, Gender, Date of Birth (calendar picker; ISO yyyy-mm-dd payload), automatically calculated Age (completed years), and Contact number (Indian WhatsApp mobile number; +91 accepted). Email ID, Education Qualification, Current profession, and Special skills are optional. City Samithi registrants must choose at least one group.
+Required fields: Bhajan Mandali / City Samithi, Name, Gender, Date of Birth (calendar picker; ISO yyyy-mm-dd payload), automatically calculated Age (completed years), and Contact number (Indian WhatsApp mobile number; +91 accepted). Email ID, Education Qualification, Current profession, and Special skills are optional. City Samithi registrants must choose at least one group.
 
-The first selection is Devotee, followed by the ten Bhajan Mandalis and City Samithi. City Samithi groups: Singers Group, Balvikas Group, Youth Wing, Sevadal and Spiritual Wing.
+The community selection contains the ten Bhajan Mandalis and City Samithi. Devotee belongs only to City Samithi groups. City Samithi groups: Devotee, Singers Group, Balvikas Group, Youth Wing, Sevadal and Spiritual Wing.
 
 On the first valid submission, the receiver safely renames H1 to Education Qualification and adds Contact number in M1; existing rows and A:L ordering remain intact. Old registrations without contacts are preserved. The receiver rejects a fresh submission matching normalized name, birth date, gender and contact (or a matching legacy record without contact), while allowing retries with the same submission ID. Household members can share one phone when their other identity fields differ. Legacy dd/mm/yy dates remain readable for duplicate matching.
 

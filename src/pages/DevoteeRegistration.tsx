@@ -225,7 +225,7 @@ export function DevoteeRegistrationPage() {
                     onChange={(e) => update("community", e.target.value)}
                     className={input}
                   >
-                    <option value="">Select Devotee, Bhajan Mandali or City Samithi</option>
+                    <option value="">Select Bhajan Mandali or City Samithi</option>
                     {COMMUNITY_OPTIONS.map((c) => (
                       <option key={c} value={c}>
                         {c}

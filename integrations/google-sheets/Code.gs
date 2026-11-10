@@ -4,7 +4,7 @@ const HEADERS = ['Submission ID','Submitted At','Name','Gender','Age','Date of B
 function jsonResponse(value) {
   return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(ContentService.MimeType.JSON);
 }
-function doGet() { return jsonResponse({ok:true,service:'devotee-registrations',version:8}); }
+function doGet() { return jsonResponse({ok:true,service:'devotee-registrations',version:10}); }
 function doPost(e) {
   let lock;
   try {
@@ -62,5 +62,6 @@ function validBirthDate(dob, ageText) {
   return birth.getFullYear()===year && birth.getMonth()===month-1 && birth.getDate()===day && dob<=Utilities.formatDate(new Date(),'Asia/Kolkata','yyyy-MM-dd') && age>=0 && age<=120 && age===Number(ageText);
 }
 
-const COMMUNITY_OPTIONS = ['Devotee','MVP Colony','Lawsons Bay Colony','Waltair Uplands','Seethammadhara','Nakkavanipalem','HB Colony','Arilova','Sagar Nagar','Yendada','Vishalakshi Nagar','City Samithi'];
-const CITY_GROUPS = ['Singers Group','Balvikas Group','Youth Wing','Sevadal','Spiritual Wing'];
+const COMMUNITY_OPTIONS = ['MVP Colony','Lawsons Bay Colony','Waltair Uplands','Seethammadhara','Nakkavanipalem','HB Colony','Arilova','Sagar Nagar','Yendada','Vishalakshi Nagar','City Samithi'];
+const CITY_GROUPS = ['Devotee','Singers Group','Balvikas Group','Youth Wing','Sevadal','Spiritual Wing'];
+

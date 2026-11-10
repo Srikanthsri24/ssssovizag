@@ -7,7 +7,7 @@ const sheet={getMaxColumns:()=>columns,insertColumnsAfter:(_c,n)=>columns+=n,get
 const context={ContentService:{createTextOutput:text=>({setMimeType:()=>JSON.parse(text)}),MimeType:{JSON:'JSON'}},SpreadsheetApp:{openById:()=>({getSheetByName:()=>sheet}),flush:()=>{}},LockService:{getScriptLock:()=>({waitLock:()=>{},hasLock:()=>true,releaseLock:()=>{}})},Utilities:{formatDate:(_d,_z,f)=>f==='yyyy-MM-dd'?'2026-11-10':'2026-11-10 10:00:00'}};
 vm.createContext(context);vm.runInContext(readFileSync('integrations/google-sheets/Code.gs','utf8'),context);
 const id=()=>require('node:crypto').randomUUID();
-const good={submissionId:id(),community:'Devotee',groups:[],name:'TEST Required Fields',gender:'Other',age:'26',dob:'2000-08-15',contact:'9888888888',email:'',education:'',profession:'',skills:''};
+const good={submissionId:id(),community:'MVP Colony',groups:[],name:'TEST Required Fields',gender:'Other',age:'26',dob:'2000-08-15',contact:'9888888888',email:'',education:'',profession:'',skills:''};
 const post=data=>context.doPost({postData:{contents:JSON.stringify(data)}});
 for(const key of ['community','name','gender','age','dob','contact'])for(const blank of ['', '   ']) assert.equal(post({...good,[key]:blank}).ok,false,key);
 for(const data of [{email:'bad'},{dob:'2000-02-31'},{dob:'2030-01-01'},{age:'25'},{contact:'12345'},{community:'City Samithi',groups:[]}]) assert.equal(post({...good,...data}).ok,false);
@@ -23,3 +23,7 @@ assert.equal(post({...good,submissionId:id(),name:'Second Person',community:'Cit
 rows.push([id(),'2026-11-08 10:00:00','Legacy Person','Other','26',"'15/08/00",'','','','','MVP Colony','']);
 assert.equal(post({...good,submissionId:id(),name:'Legacy Person'}).ok,false);
 console.log('Passed required fields, optional fields, dates/age, contact, schema migration, duplicate and legacy checks.');
+
+assert.equal(post({...good,submissionId:id(),name:'City Devotee',community:'City Samithi',groups:['Devotee']}).ok,true);
+assert.equal(rows.at(-1)[11],'Devotee');
+assert.equal(post({...good,submissionId:id(),community:'Devotee'}).ok,false);
