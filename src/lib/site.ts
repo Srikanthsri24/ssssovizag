@@ -7,7 +7,7 @@ export const SITE = {
   address:
     "Adarsh Nagar Road, Near TTD Kalyana Mandapam, Sector 8, MVP Colony, Visakhapatnam, Andhra Pradesh – 530017",
   email: "vizagsaiyouth@gmail.com",
-  phone: "+91 00000 00000",
+  phone: "+91 88865 59393",
   subdomain: "mvp_premsadan",
 };
 

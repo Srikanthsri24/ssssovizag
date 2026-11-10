@@ -12,6 +12,8 @@ import {
 } from "lucide-react";
 import {
   GENDERS,
+  calculateAge,
+  todayISO,
   COMMUNITY_OPTIONS,
   CITY_GROUPS,
   registrationSchema,
@@ -28,6 +30,7 @@ const empty = {
   gender: "",
   age: "",
   dob: "",
+  contact: "",
   email: "",
   education: "",
   profession: "",
@@ -49,6 +52,7 @@ export function DevoteeRegistrationPage() {
     setForm((current) => ({
       ...current,
       [key]: value,
+      ...(key === "dob" ? { age: calculateAge(String(value)) } : {}),
       ...(key === "community" ? { groups: [] } : {}),
     }));
     setErrors((current) => ({ ...current, [key]: "", ...(key === "age" ? { dob: "" } : {}) }));
@@ -57,7 +61,7 @@ export function DevoteeRegistrationPage() {
     event.preventDefault();
     if (submitting) return;
     setSubmitError("");
-    const result = registrationSchema.safeParse(form);
+    const result = registrationSchema.safeParse({ ...form, age: calculateAge(form.dob) });
     if (!result.success) {
       const next: Record<string, string> = {};
       for (const issue of result.error.issues) next[String(issue.path[0])] = issue.message;
@@ -72,10 +76,8 @@ export function DevoteeRegistrationPage() {
       if (live) await sendRegistration(result.data, submissionId.current);
       setRegistered(result.data);
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch {
-      setSubmitError(
-        "We could not confirm that your registration was saved. Please retry without changing your details, or contact the Samithi if this continues.",
-      );
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Could not save registration. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -99,13 +101,15 @@ export function DevoteeRegistrationPage() {
         placeholder={placeholder}
         required={required}
         disabled={submitting}
-        type={key === "email" ? "email" : "text"}
+        type={key === "email" ? "email" : key === "dob" ? "date" : key === "contact" ? "tel" : "text"}
+        readOnly={key === "age"}
+        max={key === "dob" ? todayISO() : undefined}
         inputMode={key === "age" ? "numeric" : undefined}
         maxLength={
-          key === "age" ? 3 : key === "dob" ? 8 : key === "name" ? 100 : key === "email" ? 150 : 200
+          key === "age" ? 3 : key === "dob" ? 10 : key === "contact" ? 15 : key === "name" ? 100 : key === "email" ? 150 : 200
         }
         autoComplete={
-          key === "name" ? "name" : key === "email" ? "email" : key === "dob" ? "bday" : undefined
+          key === "contact" ? "tel" : key === "name" ? "name" : key === "email" ? "email" : key === "dob" ? "bday" : undefined
         }
         className={input}
         aria-invalid={!!errors[key]}
@@ -113,7 +117,7 @@ export function DevoteeRegistrationPage() {
       />
       {key === "dob" && (
         <p id="dob-help" className="mt-1.5 text-xs text-muted-foreground">
-          Day / month / two-digit year, e.g. 15/08/90. Enter your age in completed years.
+          Choose your birth date using the calendar. Age in completed years is calculated automatically.
         </p>
       )}
       {errors[key] && (
@@ -200,7 +204,7 @@ export function DevoteeRegistrationPage() {
                 </span>
                 <div>
                   <h2 className="font-display text-2xl font-semibold">Your registration details</h2>
-                  <p className="mt-1 text-xs text-muted-foreground">All fields except email are required.</p>
+                  <p className="mt-1 text-xs text-muted-foreground">Fields marked * are required.</p>
                 </div>
               </div>
               <div className="mb-7 space-y-5">
@@ -218,7 +222,7 @@ export function DevoteeRegistrationPage() {
                     onChange={(e) => update("community", e.target.value)}
                     className={input}
                   >
-                    <option value="">Select Bhajan Mandali or City Samithi</option>
+                    <option value="">Select Devotee, Bhajan Mandali or City Samithi</option>
                     {COMMUNITY_OPTIONS.map((c) => (
                       <option key={c} value={c}>
                         {c}
@@ -301,22 +305,26 @@ export function DevoteeRegistrationPage() {
                     </p>
                   )}
                 </div>
-                {field("age", "Age", "Completed years", true)}
-                {field("dob", "Date of Birth", "dd/mm/yy", true)}
+                {field("dob", "Date of Birth", "", true)}
+                {field("age", "Age (completed years)", "Calculated from date of birth", true)}
+                <div className="sm:col-span-2">
+                  {field("contact", "Contact number", "10-digit WhatsApp number", true)}
+                  <p className="mt-1.5 text-xs text-muted-foreground">Please provide your WhatsApp number so the Samithi can contact you.</p>
+                </div>
                 {field("email", "Email ID (optional)", "you@example.com", false)}
                 {field(
                   "education",
-                  "Highest education qualification",
+                  "Education Qualification (optional)",
                   "e.g. Graduate, Postgraduate",
+                  false,
                 )}
-                {field("profession", "Current profession", "e.g. Teacher, Student, Retired")}
+                {field("profession", "Current profession (optional)", "e.g. Teacher, Student, Retired", false)}
                 <div className="sm:col-span-2">
                   <label htmlFor="skills" className="text-sm font-medium">
-                    Special skills <span className="text-primary">*</span>
+                    Special skills (optional)
                   </label>
                   <textarea
                     id="skills"
-                    required
                     aria-describedby={errors.skills ? "skills-error" : "skills-help"}
                     value={form.skills}
                     onChange={(e) => update("skills", e.target.value)}
@@ -328,7 +336,7 @@ export function DevoteeRegistrationPage() {
                     aria-invalid={!!errors.skills}
                   />
                   <p id="skills-help" className="mt-1.5 text-xs text-muted-foreground">
-                    Enter None if you have no special skills to list.
+                    Share any skills you would like to contribute, if you wish.
                   </p>
                   {errors.skills && (
                     <p id="skills-error" className="mt-1.5 text-xs text-destructive">

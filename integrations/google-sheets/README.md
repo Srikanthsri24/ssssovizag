@@ -1,7 +1,7 @@
 # Devotee registrations → City Samithi DB
 
 The destination is the existing spreadsheet `140173DevRMJVly0v2Uo8Z9o3wT5QzFTjz5W-tF3PZcQ`, tab `Devotee Registrations`.
-Headers A1:L1 must match the `HEADERS` constant in Code.gs. Do not reorder them without updating the receiver.
+Headers A1:M1 must match the `HEADERS` constant in Code.gs. Do not reorder them without updating the receiver.
 
 ## Setup
 
@@ -20,8 +20,10 @@ The receiver validates required fields and finite options, serializes writes usi
 
 Changing script code requires deploying a new version through Manage deployments; pushing Code.gs to GitHub alone does not update Google's running receiver.
 
-Required fields: Bhajan Mandali / City Samithi, Name, Gender, Age (completed years), Date of Birth (`dd/mm/yy`), Email ID, Highest education qualification, Current profession, and Special skills. The old Sheet1 tab contains the earlier connection test and is preserved.
+Required fields: Devotee / Bhajan Mandali / City Samithi, Name, Gender, Date of Birth (calendar picker; ISO yyyy-mm-dd payload), automatically calculated Age (completed years), and Contact number (Indian WhatsApp mobile number; +91 accepted). Email ID, Education Qualification, Current profession, and Special skills are optional. City Samithi registrants must choose at least one group.
 
-Required community selection: the ten Bhajan Mandalis or City Samithi. City Samithi supports multiple groups: Singers Group, Balvikas Group, Youth Wing, Sevadal and Spiritual Wing. These are saved in columns K:L; older rows remain unchanged.
+The first selection is Devotee, followed by the ten Bhajan Mandalis and City Samithi. City Samithi groups: Singers Group, Balvikas Group, Youth Wing, Sevadal and Spiritual Wing.
 
-All visible registration fields are now required, including email, education, profession and skills. City Samithi registrants must choose at least one group. Enter None for special skills if applicable.
+On the first valid submission, the receiver safely renames H1 to Education Qualification and adds Contact number in M1; existing rows and A:L ordering remain intact. Old registrations without contacts are preserved. The receiver rejects a fresh submission matching normalized name, birth date, gender and contact (or a matching legacy record without contact), while allowing retries with the same submission ID. Household members can share one phone when their other identity fields differ. Legacy dd/mm/yy dates remain readable for duplicate matching.
+
+Deploy the updated receiver through Manage deployments before publishing the matching frontend; the live script is separate from GitHub. Run `node tests/registration-receiver.cjs` for migration, required/optional field, date, phone and duplicate checks.

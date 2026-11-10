@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { MANDALIS } from "./bhajan-mandalis";
-export const COMMUNITY_OPTIONS = [...MANDALIS.slice(0, 10).map((m) => m.name), "City Samithi"];
+export const COMMUNITY_OPTIONS = ["Devotee", ...MANDALIS.slice(0, 10).map((m) => m.name), "City Samithi"];
 export const CITY_GROUPS = [
   "Singers Group",
   "Balvikas Group",
@@ -10,29 +10,24 @@ export const CITY_GROUPS = [
 ] as const;
 
 export const GENDERS = ["Female", "Male", "Other", "Prefer not to say"] as const;
+export function calculateAge(dob: string, today = new Date()): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(dob)) return "";
+  const [year, month, day] = dob.split("-").map(Number);
+  const birth = new Date(year, month - 1, day);
+  const todayParts = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(today);
+  const part = (type: string) => Number(todayParts.find((p) => p.type === type)?.value);
+  const y = part("year"), m = part("month"), d = part("day");
+  const age = y - year - (m < month || (m === month && d < day) ? 1 : 0);
+  if (birth.getFullYear() !== year || birth.getMonth() !== month - 1 || birth.getDate() !== day || dob > `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}` || age < 0 || age > 120) return "";
+  return String(age);
+}
 export function validBirthDate(dob: string, ageText: string, today = new Date()) {
-  if (!/^\d{2}\/\d{2}\/\d{2}$/.test(dob) || !/^\d{1,3}$/.test(ageText)) return false;
-  const [day, month, shortYear] = dob.split("/").map(Number);
-  const age = Number(ageText);
-  if (age < 0 || age > 120) return false;
-  return [today.getFullYear() - age, today.getFullYear() - age - 1].some((year) => {
-    if (year % 100 !== shortYear) return false;
-    const birth = new Date(year, month - 1, day);
-    if (
-      birth.getFullYear() !== year ||
-      birth.getMonth() !== month - 1 ||
-      birth.getDate() !== day ||
-      birth > today
-    )
-      return false;
-    const actualAge =
-      today.getFullYear() -
-      year -
-      (today.getMonth() < month - 1 || (today.getMonth() === month - 1 && today.getDate() < day)
-        ? 1
-        : 0);
-    return actualAge === age;
-  });
+  return calculateAge(dob, today) !== "" && calculateAge(dob, today) === ageText;
+}
+export function todayISO() {
+  const parts = new Intl.DateTimeFormat("en-CA", {timeZone:"Asia/Kolkata",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
+  const part = (type: string) => parts.find((p) => p.type === type)?.value;
+  return `${part("year")}-${part("month")}-${part("day")}`;
 }
 export const registrationSchema = z
   .object({
@@ -43,6 +38,7 @@ export const registrationSchema = z
         "Select a valid Mandali or City Samithi.",
       ),
     groups: z.array(z.enum(CITY_GROUPS)).max(CITY_GROUPS.length),
+    contact: z.string().trim().regex(/^(?:\+?91[ -]?)?[6-9]\d{9}$/, "Enter a valid 10-digit WhatsApp number (optionally with +91)."),
     name: z.string().trim().min(2, "Enter your full name.").max(100),
     gender: z.enum(GENDERS, { errorMap: () => ({ message: "Select your gender." }) }),
     age: z
@@ -53,18 +49,17 @@ export const registrationSchema = z
     dob: z
       .string()
       .trim()
-      .regex(/^\d{2}\/\d{2}\/\d{2}$/, "Enter date of birth as dd/mm/yy."),
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "Select your date of birth."),
     email: z
       .string()
       .trim()
       .max(150)
       .refine((value) => value === "" || z.string().email().safeParse(value).success, "Enter a valid email address."),
-    education: z.string().trim().min(1, "Enter your highest education qualification.").max(200),
-    profession: z.string().trim().min(1, "Enter your current profession.").max(200),
+    education: z.string().trim().max(200),
+    profession: z.string().trim().max(200),
     skills: z
       .string()
       .trim()
-      .min(1, "Enter your special skills, or None if not applicable.")
       .max(1000),
   })
   .superRefine((data, ctx) => {
@@ -84,7 +79,7 @@ export const registrationSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["dob"],
-        message: "Enter a valid date of birth in dd/mm/yy format that matches your age.",
+        message: "Select a valid date of birth. Age is calculated automatically.",
       });
   });
 export type Registration = z.infer<typeof registrationSchema>;
