@@ -16,6 +16,7 @@ import {
   todayISO,
   COMMUNITY_OPTIONS,
   CITY_GROUPS,
+  BLOOD_GROUPS,
   registrationSchema,
   registrationEndpoint,
   sendRegistration,
@@ -28,6 +29,7 @@ const empty = {
   groups: [] as string[],
   name: "",
   gender: "",
+  bloodGroup: "",
   age: "",
   dob: "",
   contact: "",
@@ -84,7 +86,7 @@ export function DevoteeRegistrationPage() {
     }
   }
   const field = (
-    key: Exclude<keyof typeof empty, "gender" | "skills" | "community" | "groups">,
+    key: Exclude<keyof typeof empty, "gender" | "bloodGroup" | "skills" | "community" | "groups">,
     label: string,
     placeholder: string,
     required = true,
@@ -322,6 +324,31 @@ export function DevoteeRegistrationPage() {
                   false,
                 )}
                 {field("profession", "Current profession (optional)", "e.g. Teacher, Student, Retired", false)}
+                <div>
+                  <label htmlFor="bloodGroup" className="text-sm font-medium">
+                    Blood Group (optional)
+                  </label>
+                  <select
+                    id="bloodGroup"
+                    name="bloodGroup"
+                    value={form.bloodGroup}
+                    onChange={(e) => update("bloodGroup", e.target.value)}
+                    disabled={submitting}
+                    className={input}
+                    aria-invalid={!!errors.bloodGroup}
+                    aria-describedby={errors.bloodGroup ? "bloodGroup-error" : undefined}
+                  >
+                    <option value="">Select blood group</option>
+                    {BLOOD_GROUPS.map((group) => (
+                      <option key={group} value={group}>{group}</option>
+                    ))}
+                  </select>
+                  {errors.bloodGroup && (
+                    <p id="bloodGroup-error" className="mt-1.5 text-xs text-destructive">
+                      {errors.bloodGroup}
+                    </p>
+                  )}
+                </div>
                 <div className="sm:col-span-2">
                   <label htmlFor="skills" className="text-sm font-medium">
                     Special skills (optional)

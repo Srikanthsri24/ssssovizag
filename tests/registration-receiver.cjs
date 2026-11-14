@@ -13,7 +13,7 @@ for(const key of ['community','name','gender','age','dob','contact'])for(const b
 for(const data of [{email:'bad'},{dob:'2000-02-31'},{dob:'2030-01-01'},{age:'25'},{contact:'12345'},{community:'City Samithi',groups:[]}]) assert.equal(post({...good,...data}).ok,false);
 assert.equal(rows.length,0);
 assert.equal(post(good).ok,true);
-assert.equal(headers[7],'Education Qualification');assert.equal(headers[12],'Contact number');assert.equal(columns,13);
+assert.equal(headers[7],'Education Qualification');assert.equal(headers[12],'Contact number');assert.equal(headers[13],'Blood Group');assert.equal(columns,14);
 assert.equal(rows[0][12],'9888888888');
 assert.equal(post(good).ok,true);assert.equal(rows.length,1);
 assert.equal(post({...good,submissionId:id()}).ok,false);assert.equal(rows.length,1);
@@ -27,3 +27,13 @@ console.log('Passed required fields, optional fields, dates/age, contact, schema
 assert.equal(post({...good,submissionId:id(),name:'City Devotee',community:'City Samithi',groups:['Devotee']}).ok,true);
 assert.equal(rows.at(-1)[11],'Devotee');
 assert.equal(post({...good,submissionId:id(),community:'Devotee'}).ok,false);
+
+const city={...good,submissionId:id(),community:'City Samithi',groups:['Vedam Group'],bloodGroup:'Prefer not to say'};
+assert.equal(post(city).ok,true,'Mandali members can also register for City Samithi');
+assert.equal(rows.at(-1)[11],'Vedam Group');
+assert.equal(rows.at(-1)[13],'Prefer not to say');
+assert.equal(post({...city,submissionId:id()}).ok,false,'City Samithi duplicates are rejected');
+assert.equal(post({...good,submissionId:id(),name:'Invalid Blood Group',bloodGroup:'C+'}).ok,false);
+assert.equal(post({...good,submissionId:id(),name:'Blood Group Choice',bloodGroup:'AB-'}).ok,true);
+assert.equal(rows.at(-1)[13],'AB-');
+console.log('Passed Vedam Group, Blood Group and community-scoped duplicates.');

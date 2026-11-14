@@ -8,7 +8,10 @@ export const CITY_GROUPS = [
   "Youth Wing",
   "Sevadal",
   "Spiritual Wing",
+  "Vedam Group",
 ] as const;
+
+export const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-", "Prefer not to say"] as const;
 
 export const GENDERS = ["Female", "Male", "Other", "Prefer not to say"] as const;
 export function calculateAge(dob: string, today = new Date()): string {
@@ -41,6 +44,7 @@ export const registrationSchema = z
     groups: z.array(z.enum(CITY_GROUPS)).max(CITY_GROUPS.length),
     contact: z.string().trim().regex(/^[6-9]\d{9}$/, "Enter a valid 10-digit mobile number starting with 6, 7, 8 or 9."),
     name: z.string().trim().min(2, "Enter your full name.").max(100),
+    bloodGroup: z.union([z.literal(""), z.enum(BLOOD_GROUPS)]).optional(),
     gender: z.enum(GENDERS, { errorMap: () => ({ message: "Select your gender." }) }),
     age: z
       .string()

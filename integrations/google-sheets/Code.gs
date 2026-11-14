@@ -1,10 +1,10 @@
 // Bound to City Samithi DB. Only appends registration rows; never returns registrant data.
 const SPREADSHEET_ID = '140173DevRMJVly0v2Uo8Z9o3wT5QzFTjz5W-tF3PZcQ';
-const HEADERS = ['Submission ID','Submitted At','Name','Gender','Age','Date of Birth','Email ID','Education Qualification','Current profession','Special skills','Bhajan Mandali / City Samithi','City Samithi groups','Contact number'];
+const HEADERS = ['Submission ID','Submitted At','Name','Gender','Age','Date of Birth','Email ID','Education Qualification','Current profession','Special skills','Bhajan Mandali / City Samithi','City Samithi groups','Contact number','Blood Group'];
 function jsonResponse(value) {
   return ContentService.createTextOutput(JSON.stringify(value)).setMimeType(ContentService.MimeType.JSON);
 }
-function doGet() { return jsonResponse({ok:true,service:'devotee-registrations',version:10}); }
+function doGet() { return jsonResponse({ok:true,service:'devotee-registrations',version:11}); }
 function doPost(e) {
   let lock;
   try {
@@ -19,6 +19,8 @@ function doPost(e) {
     const contact = text(data.contact,15).replace(/[ +()-]/g,'').replace(/^91(?=\d{10}$)/,'');
     if (!/^[6-9]\d{9}$/.test(contact)) throw new Error('Enter a valid 10-digit WhatsApp contact number.');
     const community = text(data.community,100), groups = data.groups === undefined ? [] : data.groups;
+    const bloodGroup = data.bloodGroup === undefined ? '' : data.bloodGroup;
+    if (bloodGroup !== '' && !BLOOD_GROUPS.includes(bloodGroup)) throw new Error('Select a valid blood group.');
     if (!COMMUNITY_OPTIONS.includes(community)) throw new Error('Invalid Bhajan Mandali or City Samithi.');
     if (!Array.isArray(groups) || groups.length>CITY_GROUPS.length || groups.some(g=>!CITY_GROUPS.includes(g)) || (community !== 'City Samithi' && groups.length) || (community === 'City Samithi' && !groups.length)) throw new Error('Invalid City Samithi groups.');
     lock = LockService.getScriptLock(); lock.waitLock(20000);
@@ -33,10 +35,10 @@ function doPost(e) {
       if (/^\d{4}-\d{2}-\d{2}$/.test(v)) return v.slice(8)+'/'+v.slice(5,7)+'/'+v.slice(2,4);
       return v.replace(/(\d{2}\/\d{2}\/)\d{2}(\d{2})$/, '$1$2');
     };
-    if (rows.some(row=>normalName(row[2])===normalName(name) && birthKey(row[5])===birthKey(dob) && row[3]===data.gender && (!row[12] || String(row[12]).replace(/[^0-9]/g,'').replace(/^91(?=\d{10}$)/,'')===contact)))
-      throw new Error('This person is already registered. Please contact the Samithi if you need to update the details.');
+    if (rows.some(row=>row[10]===community && normalName(row[2])===normalName(name) && birthKey(row[5])===birthKey(dob) && row[3]===data.gender && (!row[12] || String(row[12]).replace(/[^0-9]/g,'').replace(/^91(?=\d{10}$)/,'')===contact)))
+      throw new Error('This person is already registered for the selected Bhajan Mandali or City Samithi. Please contact the Samithi if you need to update the details.');
     const safe = value => /^[=+@\-\t\r]/.test(value) ? "'"+value : value;
-    sheet.appendRow([id,Utilities.formatDate(new Date(),'Asia/Kolkata','yyyy-MM-dd HH:mm:ss'),safe(name),data.gender,Number(ageText),"'"+dob,safe(email),safe(text(data.education,200)),safe(text(data.profession,200)),safe(text(data.skills,1000)),community,[...new Set(groups)].join(', '),safe(contact)]);
+    sheet.appendRow([id,Utilities.formatDate(new Date(),'Asia/Kolkata','yyyy-MM-dd HH:mm:ss'),safe(name),data.gender,Number(ageText),"'"+dob,safe(email),safe(text(data.education,200)),safe(text(data.profession,200)),safe(text(data.skills,1000)),community,[...new Set(groups)].join(', '),safe(contact),safe(bloodGroup)]);
     SpreadsheetApp.flush();
     return jsonResponse({ok:true,submissionId:id});
   } catch(error) { return jsonResponse({ok:false,error:error.message || 'Could not save registration.'}); }
@@ -47,9 +49,12 @@ function ensureRegistrationColumns(sheet) {
   const current = sheet.getRange(1,1,1,12).getDisplayValues()[0];
   if (current.some((value,i)=>value!==HEADERS[i] && !(i===7 && value==='Highest education qualification')))
     throw new Error('Registration sheet columns have changed. Please contact the Samithi.');
-  if (sheet.getMaxColumns()<13) sheet.insertColumnsAfter(sheet.getMaxColumns(),13-sheet.getMaxColumns());
+  if (sheet.getMaxColumns()<HEADERS.length) sheet.insertColumnsAfter(sheet.getMaxColumns(),HEADERS.length-sheet.getMaxColumns());
   const contactHeader=sheet.getRange(1,13).getDisplayValue();
   if (contactHeader && contactHeader!=='Contact number') throw new Error('Contact column is already in use. Please contact the Samithi.');
+  const bloodGroupHeader=sheet.getRange(1,14).getDisplayValue();
+  if (bloodGroupHeader && bloodGroupHeader!==HEADERS[13]) throw new Error('Blood Group column is already in use. Please contact the Samithi.');
+  if (!bloodGroupHeader) sheet.getRange(1,14).setValue(HEADERS[13]);
   if (current[7]!==HEADERS[7]) sheet.getRange(1,8).setValue(HEADERS[7]);
   if (!contactHeader) sheet.getRange(1,13).setValue('Contact number');
 }
@@ -63,5 +68,6 @@ function validBirthDate(dob, ageText) {
 }
 
 const COMMUNITY_OPTIONS = ['MVP Colony','Lawsons Bay Colony','Waltair Uplands','Seethammadhara','Nakkavanipalem','HB Colony','Arilova','Sagar Nagar','Yendada','Vishalakshi Nagar','City Samithi'];
-const CITY_GROUPS = ['Devotee','Singers Group','Balvikas Group','Youth Wing','Sevadal','Spiritual Wing'];
+const CITY_GROUPS = ['Devotee','Singers Group','Balvikas Group','Youth Wing','Sevadal','Spiritual Wing','Vedam Group'];
+const BLOOD_GROUPS = ['A+','A-','B+','B-','AB+','AB-','O+','O-','Prefer not to say'];
 
